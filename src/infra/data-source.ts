@@ -1,4 +1,8 @@
 import { DataSource } from "typeorm"
+import { StellarSystem } from "../entity/StellarSystem"
+import { Character } from "../entity/Characters"
+import { Planet } from "../entity/Planets"
+import { Spaceship } from "../entity/Spaceships"
 
 const AppDataSource = new DataSource({
     type: "mysql",
@@ -7,6 +11,8 @@ const AppDataSource = new DataSource({
     username: "local_user",
     password: "local_password",
     database: "galaxy",
+    entities: [StellarSystem, Character, Planet, Spaceship],
+    synchronize: true
 })
 
 AppDataSource.initialize()
@@ -16,5 +22,6 @@ AppDataSource.initialize()
     .catch((err) => {
         console.error("Error during Data Source initialization", err)
     })
+
 
 export default AppDataSource;

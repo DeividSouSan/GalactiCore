@@ -8,11 +8,21 @@ const route = Router();
 
 app.use(express.json());
 
+
 route.get("/status", (req: Request, res: Response) => {
     const version = AppDataSource.driver.version
 
     res.json({
-        message: version
+        message: version,
+    })
+})
+
+route.get("/databases", async (req: Request, res: Response) => {
+    const queryRunner = AppDataSource.createQueryRunner();
+    const tables = await queryRunner.getTables();
+
+    res.json({
+        result: tables.map((table) => table.name),
     })
 })
 
