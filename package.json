@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node src/server.ts",
-    "up": " docker compose --file src/infra/compose.yaml up",
+    "dev": "ts-node src/server.ts && npm run services:up",
     "build": "tsc",
-    "serve": "node dist/server.js",
-    "down": "docker compose --file src/infra/compose.yaml down"
+    "services:up": " docker compose --file src/infra/compose.yaml up -d",
+    "services:stop": " docker compose --file src/infra/compose.yaml stop",
+    "services:down": "docker compose --file src/infra/compose.yaml down",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
