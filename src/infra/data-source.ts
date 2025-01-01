@@ -1,4 +1,5 @@
 import { DataSource } from "typeorm"
+import "reflect-metadata";
 import { StellarSystem } from "../entity/StellarSystem"
 import { Character } from "../entity/Characters"
 import { Planet } from "../entity/Planets"
