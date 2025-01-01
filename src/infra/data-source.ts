@@ -12,7 +12,7 @@ const AppDataSource = new DataSource({
     password: "local_password",
     database: "galaxy",
     entities: [StellarSystem, Character, Planet, Spaceship],
-    synchronize: true
+    migrations: ["src/migrations/*"],
 })
 
 AppDataSource.initialize()

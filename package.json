@@ -9,6 +9,7 @@
     "services:up": " docker compose --file src/infra/compose.yaml up -d",
     "services:stop": " docker compose --file src/infra/compose.yaml stop",
     "services:down": "docker compose --file src/infra/compose.yaml down",
+    "typeorm": "typeorm-ts-node-commonjs -d src/infra/data-source.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
