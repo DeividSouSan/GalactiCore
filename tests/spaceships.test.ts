@@ -16,6 +16,22 @@ describe('spaceships entity routes', () => {
         expect(response.status).toEqual(200)
     });
 
+    test('post_the_same_item_should_return_300', async () => {
+        const response = await fetch("http://localhost:3000/spaceships/", {
+            headers: {
+                "Content-Type": 'application/json',
+            },
+            method: "POST",
+            body: JSON.stringify({
+                "model": "2025",
+                "manufacturer": "God",
+                "capacity": 12
+            })
+        })
+
+        expect(response.status).toEqual(200)
+    });
+
     test('get_to_spaceships_should_return_200', async () => {
         const response = await fetch("http://localhost:3000/spaceships/")
 
