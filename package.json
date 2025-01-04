@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "dev": "npm run services:up && npm run typeorm migration:run && ts-node src/server.ts",
+    "dev": "docker compose --file src/infra/compose.yaml up -d && sleep 10 && npm run typeorm migration:run && sleep 10 && ts-node src/server.ts",
     "build": "tsc",
-    "services:up": " docker compose --file src/infra/compose.yaml up -d",
+    "services:up": "docker compose --file src/infra/compose.yaml up -d",
     "services:stop": " docker compose --file src/infra/compose.yaml stop",
     "services:down": "docker compose --file src/infra/compose.yaml down",
     "typeorm": "typeorm-ts-node-commonjs -d src/infra/data-source.ts",
@@ -27,6 +27,7 @@
     "typescript": "^5.7.2"
   },
   "dependencies": {
+    "dotenv": "^16.4.7",
     "mysql2": "^3.12.0",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.20"
