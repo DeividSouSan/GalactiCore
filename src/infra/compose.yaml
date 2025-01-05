@@ -2,6 +2,6 @@ services:
   database:
     image: mysql:9.1.0
     env_file:
-      - ../../.env.development
+      - ../../.env
     ports:
       - 3306:3306

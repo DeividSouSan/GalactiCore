@@ -6,16 +6,12 @@ import { Planet } from "../entity/Planets"
 import { Spaceship } from "../entity/Spaceships"
 import dotenv from 'dotenv';
 
-dotenv.config({
-    path: ".env.development"
-})
-
-console.log("Teste ", process.env.MYSQL_DATABASE);
+dotenv.config()
 
 const AppDataSource = new DataSource({
     type: "mysql",
-    host: "localhost",
-    port: 3306,
+    host: process.env.MYSQL_HOST,
+    port: parseInt(process.env.PORT),
     username: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
