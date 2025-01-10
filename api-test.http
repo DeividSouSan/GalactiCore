@@ -30,14 +30,26 @@ DELETE http://localhost:3000/spaceships/2 HTTP/1.1
 ### GET
 GET http://localhost:3000/stellar-systems/ HTTP/1.1
 
+### GET 
+
+GET http://localhost:3000/stellar-systems/2 HTTP/1.1
+
 ### POST
 POST http://localhost:3000/stellar-systems/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "Nova Gazeta",
-    "description": "Arejado e com um ar de morto."
+    "name": "Nova Nação",
+    "description": "Ar de morto, morto no chão."
 }
 
+### PUT
+PUT http://localhost:3000/stellar-systems/1 HTTP/1.1
+Content-Type: application/json
 
+{
+    "name": "Deividollar"
+}
 
+### DELETE
+DELETE http://localhost:3000/stellar-systems/9 HTTP/1.1
