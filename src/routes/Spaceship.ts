@@ -2,11 +2,12 @@ import express from 'express';
 import { Request, Response } from 'express';
 import database from '../infra/data-source';
 import { Spaceship } from '../entity/Spaceships';
+import { Repository } from 'typeorm';
 
 const router = express.Router();
 
 router.post('/', (req: Request, res: Response) => {
-    const repository = database.getRepository(Spaceship);
+    const repository: Repository<Spaceship> = database.getRepository(Spaceship);
     const spaceship = repository.create(req.body)
 
     repository.save(spaceship);
