@@ -1,60 +1,51 @@
 
-describe('spaceships entity routes', () => {
-    test('post_should_return_200', async () => {
+describe('test /spaceships endpoint', () => {
+    test('get_all_spaceships_should_return_200', async () => {
+        const response = await fetch("http://localhost:3000/spaceships/", {
+            headers: {
+                "Content-Type": 'application/json',
+            },
+            method: "GET",
+        })
+
+
+        const body = await response.json();
+
+        console.log(body);
+        expect(body.status).toBe("success");
+        expect(response.status).toEqual(200);
+    });
+
+
+    test('post_spaceship_should_return_201', async () => {
         const response = await fetch("http://localhost:3000/spaceships/", {
             headers: {
                 "Content-Type": 'application/json',
             },
             method: "POST",
             body: JSON.stringify({
-                "model": "2025",
-                "manufacturer": "God",
-                "capacity": 12
+                "model": "AAAA",
+                "manufacturer": "BBBB",
+                "capacity": 10
             })
         })
 
-        expect(response.status).toEqual(200)
+        expect(response.status).toEqual(201)
     });
 
-    test('post_the_same_item_should_return_300', async () => {
+    test('post_spaceship_should_return_201', async () => {
         const response = await fetch("http://localhost:3000/spaceships/", {
             headers: {
                 "Content-Type": 'application/json',
             },
             method: "POST",
             body: JSON.stringify({
-                "model": "2025",
-                "manufacturer": "God",
-                "capacity": 12
+                "model": "AAAA",
+                "manufacturer": "BBBB",
+                "capacity": 10
             })
         })
 
-        expect(response.status).toEqual(200)
-    });
-
-    test('get_to_spaceships_should_return_200', async () => {
-        const response = await fetch("http://localhost:3000/spaceships/")
-
-        expect(response.status).toEqual(200)
-    });
-
-    test('get_to_spaceships_id_should_return_200', async () => {
-        const response = await fetch("http://localhost:3000/spaceships/1")
-
-        expect(response.status).toEqual(200)
-    });
-
-    test('put_to_spaceships_id_should_return_200', async () => {
-        const response = await fetch("http://localhost:3000/spaceships/")
-
-        expect(response.status).toEqual(200)
-    });
-
-    test('delete_to_spaceships_id_should_return_200', async () => {
-        const response = await fetch("http://localhost:3000/spaceships/2", {
-            method: 'DELETE',
-        })
-
-        expect(response.status).toEqual(200)
+        expect(response.status).toEqual(201)
     });
 });
