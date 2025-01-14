@@ -21,6 +21,6 @@ app.get("/", (req: Request, res: Response) => {
     });
 })
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
     console.log(`Server listing on port ${PORT}`);
 })
