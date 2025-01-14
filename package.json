@@ -9,7 +9,7 @@
     "services:up": "docker compose --file src/infra/compose.yaml up -d",
     "services:stop": " docker compose --file src/infra/compose.yaml stop",
     "services:down": "docker compose --file src/infra/compose.yaml down",
-    "migrations:run": "npm run typeorm migration:run",
+    "migrations:up": "npm run typeorm migration:run",
     "typeorm": "typeorm-ts-node-commonjs -d src/infra/data-source.ts",
     "test": "jest --watch"
   },
