@@ -11,53 +11,56 @@ router.post("/", async (req: Request, res: Response) => {
     const repository: Repository<Planet> = database.getRepository(Planet);
 
     try {
-        const newPlanet = repository.create(req.body);
-
-        await repository.save(newPlanet);
+        const planet = repository.create(req.body);
+        await repository.save(planet);
 
         res.status(HTTPStatus.CREATED).json({
             "status": "success",
             "message": "Requisição processada com sucesso",
             "data": {
-                newPlanet
+                planet
             }
         })
-    } catch (err) {
+    } catch {
         res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
-            "status": "fail",
-            "message": "Um erro correu durante a criação da entidade",
+            "status": "error",
+            "message": "Erro ao processar a requisição",
             "data": {}
         })
     }
 })
 
-
 router.get("/", async (req: Request, res: Response) => {
     const repository: Repository<Planet> = database.getRepository(Planet);
 
-    const [planets, countPlanets] = await repository.findAndCount({
-        relations: ["stellarSystem"]
-    });
+    try {
+        const [planets, countPlanets]: [Planet[], number] = await repository.findAndCount({
+            relations: ["stellarSystem"]
+        });
 
-    res.status(HTTPStatus.OK).json({
-        "status": "success",
-        "message": "Requisição processada com sucesso",
-        "data": {
-            countPlanets,
-            planets,
-        }
-    })
+        res.status(HTTPStatus.OK).json({
+            "status": "success",
+            "message": "Requisição processada com sucesso",
+            "data": {
+                countPlanets,
+                planets
+            }
+        })
+    } catch {
+        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
+            "status": "error",
+            "message": "Erro ao processar a requisição",
+            "data": {}
+        })
+    }
 })
 
 router.get("/:id", async (req: Request, res: Response) => {
     const repository: Repository<Planet> = database.getRepository(Planet);
-    const id: number = parseInt(req.params.id);
 
     try {
-
-        const planet: Planet = await repository.findOneByOrFail({
-            id: id
-        })
+        const id: number = parseInt(req.params.id);
+        const planet: Planet = await repository.findOneByOrFail({ id: id })
 
         res.status(HTTPStatus.OK).json({
             "status": "success",
@@ -66,10 +69,10 @@ router.get("/:id", async (req: Request, res: Response) => {
                 planet
             }
         })
-    } catch (EntityNotFoundError) {
-        res.status(HTTPStatus.NOT_FOUND).json({
+    } catch {
+        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
             "status": "error",
-            "message": "Requisição processada com sucesso, mas a entidade não foi encontrada",
+            "message": "Erro ao processar a requisição",
             "data": {
                 planet: {}
             }
@@ -79,9 +82,9 @@ router.get("/:id", async (req: Request, res: Response) => {
 
 router.put("/:id", async (req: Request, res: Response) => {
     const repository: Repository<Planet> = database.getRepository(Planet);
-    const id: number = parseInt(req.params.id);
 
     try {
+        const id: number = parseInt(req.params.id);
         await repository.update({ id: id }, req.body);
 
         res.status(HTTPStatus.OK).send({
@@ -92,7 +95,7 @@ router.put("/:id", async (req: Request, res: Response) => {
     } catch {
         res.status(HTTPStatus.INTERNAL_SERVER_ERROR).send({
             "status": "error",
-            "message": "Algum erro ocorreu",
+            "message": "Erro ao processar a requisição",
             "data": {}
         })
     }
@@ -100,22 +103,23 @@ router.put("/:id", async (req: Request, res: Response) => {
 
 router.delete("/:id", async (req: Request, res: Response) => {
     const repository: Repository<Planet> = database.getRepository(Planet);
-    const id: number = parseInt(req.params.id);
 
     try {
-        await repository.findOneByOrFail({ id: id })
-
+        const id: number = parseInt(req.params.id);
+        const planet: Planet = await repository.findOneByOrFail({ id: id });
         await repository.delete({ id: id })
 
         res.status(HTTPStatus.OK).send({
             "status": "success",
-            "message": "Entidade deletada com sucesso",
-            "data": {}
+            "message": "Requisição processada com sucesso",
+            "data": {
+                planet
+            }
         })
     } catch {
         res.status(HTTPStatus.INTERNAL_SERVER_ERROR).send({
             "status": "error",
-            "message": "Entidade não existe no banco de dados",
+            "message": "Erro ao processar a requisição",
             "data": {}
         })
     }
