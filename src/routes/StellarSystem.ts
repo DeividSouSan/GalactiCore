@@ -2,7 +2,7 @@ import express from 'express';
 import { Request, Response } from 'express';
 import database from '../infra/data-source'
 import { Repository } from 'typeorm';
-import { StellarSystem } from '../entity/StellarSystem';
+import { StellarSystem } from '../entity/StellarSystems';
 import HTTPStatus from 'http-status-codes';
 
 const router = express.Router()
@@ -57,7 +57,7 @@ router.get("/:id", async (req: Request, res: Response) => {
     const repository: Repository<StellarSystem> = database.getRepository(StellarSystem);
 
     try {
-        const id: number = parseInt(req.params["id"]);
+        const id: number = parseInt(req.params.id);
         const stellarSystem: StellarSystem = await repository.findOneByOrFail({ id: id });
 
         res.status(HTTPStatus.OK).json({
