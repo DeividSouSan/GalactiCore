@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import spaceshipRouter from './routes/Spaceship';
 import stellarSystemRouter from './routes/StellarSystem';
 import planetRouter from './routes/Planets';
+import characterRouter from './routes/Characters';
 import database from './infra/data-source'
 
 const app = express();
@@ -11,6 +12,7 @@ app.use(express.json());
 app.use('/spaceships', spaceshipRouter);
 app.use('/stellar-systems', stellarSystemRouter);
 app.use('/planets', planetRouter);
+app.use('/characters', characterRouter);
 
 app.get("/", (req: Request, res: Response) => {
 
