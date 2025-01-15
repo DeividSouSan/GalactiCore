@@ -7,12 +7,12 @@ import HTTPStatus from 'http-status-codes';
 
 const router = express.Router();
 
-router.post('/', (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response) => {
     const repository: Repository<Spaceship> = database.getRepository(Spaceship);
 
     try {
-        const spaceship = repository.create(req.body)
-        repository.save(spaceship);
+        const spaceship = repository.create(req.body);
+        await repository.save(spaceship);
 
         res.status(HTTPStatus.CREATED).json({
             "status": "success",
@@ -21,23 +21,21 @@ router.post('/', (req: Request, res: Response) => {
                 spaceship
             }
         })
-    } catch (error) {
+    } catch {
         res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
             "status": "error",
-            "message": "Ocorreu um erro ao processar a requisição",
+            "message": "Erro ao processar a requisição",
             "data": {}
         })
     }
-
-
-
 })
 
 router.get('/', async (req: Request, res: Response) => {
     const repository = database.getRepository(Spaceship);
-    const [spaceships, countSpaceships] = await repository.findAndCount();
 
     try {
+        const [spaceships, countSpaceships]: [Spaceship[], number] = await repository.findAndCount();
+
         res.status(HTTPStatus.OK).json({
             "status": "success",
             "message": "Requisição processada com sucesso",
@@ -46,10 +44,10 @@ router.get('/', async (req: Request, res: Response) => {
                 spaceships
             }
         })
-    } catch (error) {
+    } catch {
         res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
             "status": "error",
-            "message": "Ocorreu um erro ao processar a requisição",
+            "message": "Erro ao processar a requisição",
             "data": {}
         })
     }
@@ -57,48 +55,70 @@ router.get('/', async (req: Request, res: Response) => {
 
 router.get('/:id', async (req: Request, res: Response) => {
     const repository = database.getRepository(Spaceship);
-    const spaceship = await repository.findOneBy({
-        id: parseInt(req.params["id"])
-    })
 
-    res.send({
-        result: spaceship
-    })
+    try {
+        const id: number = parseInt(req.params["id"]);
+        const spaceship: Spaceship = await repository.findOneByOrFail({ id: id });
+
+        res.status(HTTPStatus.OK).json({
+            "status": "success",
+            "message": "Requisição processada com sucesso",
+            "data": {
+                spaceship
+            }
+        })
+    } catch {
+        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
+            "status": "error",
+            "message": "Erro ao processar a requisição",
+            "data": {}
+        })
+    }
 })
 
 router.put('/:id', async (req: Request, res: Response) => {
     const repository = database.getRepository(Spaceship);
-    const spaceship = await repository.findOneBy({
-        id: parseInt(req.params["id"])
-    })
 
-    if (req.body["model"]) {
-        spaceship.model = req.body["model"]
+    try {
+        const id: number = parseInt(req.params.id);
+        await repository.update({ id: id }, req.body);
+
+        res.status(HTTPStatus.OK).json({
+            "status": "success",
+            "message": "Requisição processada com sucesso",
+            "data": await repository.findOneByOrFail({ id: id })
+        })
+    } catch {
+        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
+            "status": "error",
+            "message": "Erro ao processar a requisição",
+            "data": {}
+        })
     }
-
-    if (req.body["manufacturer"]) {
-        spaceship.manufacturer = req.body["manufacturer"]
-    }
-
-    if (req.body["capacity"]) {
-        spaceship.capacity = req.body.capacity
-    }
-
-    repository.save(spaceship);
-
-    res.send({
-        result: spaceship
-    })
 })
 
 router.delete('/:id', async (req: Request, res: Response) => {
     const repository = database.getRepository(Spaceship);
 
-    await repository.delete(parseInt(req.params["id"]))
+    try {
+        const id: number = parseInt(req.params.id);
+        const spaceship: Spaceship = await repository.findOneByOrFail({ id: id });
+        await repository.delete({ id: id });
 
-    res.send({
-        result: "Success"
-    })
+        res.status(HTTPStatus.OK).json({
+            "status": "success",
+            "message": "Requisição processada com sucesso",
+            "data": {
+                spaceship
+            }
+        })
+    } catch {
+        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
+            "status": "error",
+            "message": "Erro ao processar a requisição",
+            "data": {}
+        })
+    }
 })
 
 export default router;

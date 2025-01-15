@@ -1,31 +1,71 @@
-### GET request - Spaceship Route
+# /spaceships
+
+### GET request | get all spaceships
 GET http://localhost:3000/spaceships/ HTTP/1.1
 
-### GET request 
-GET http://localhost:3000/spaceships/2 HTTP/1.1
+### POST request | post request with valid body
+POST http://localhost:3000/spaceships HTTP/1.1
+Content-Type: application/json
 
-### PUT request
-PUT http://localhost:3000/spaceships/2 HTTP/1.1
+{
+    "model": "BBBB",
+    "manufacturer": "Deivid",
+    "capacity": 10
+}
+
+### POST request | post spaceship that already exists
+POST http://localhost:3000/spaceships HTTP/1.1
+Content-Type: application/json
+
+{
+    "model": "BBBB",
+    "manufacturer": "Deivid",
+    "capacity": 10
+}
+
+### POST request | post request with invalid body
+POST http://localhost:3000/spaceships HTTP/1.1
+Content-Type: application/json
+
+{
+    "model": "BBBB",
+    "capacity": 10
+}
+
+### GET request | get a spaceship
+GET http://localhost:3000/spaceships/1 HTTP/1.1
+
+### GET request | get spaceship that doesn't exists
+GET http://localhost:3000/spaceships/99 HTTP/1.1
+
+### PUT request | update entity
+PUT http://localhost:3000/spaceships/1 HTTP/1.1
 Content-Type: application/json
 
 {
     "manufacturer": "Deividollar"
 }
 
-### POST request
-POST http://localhost:3000/spaceships HTTP/1.1
+### PUT request | update non existent entity
+PUT http://localhost:3000/spaceships/99 HTTP/1.1
 Content-Type: application/json
 
 {
-    "model": "2025",
-    "manufacturer": "God",
-    "capacity": 12
+    "manufacturer": "Deividollar"
 }
 
-### DELETE request
+### DELETE request | delete a entity
+DELETE http://localhost:3000/spaceships/20 HTTP/1.1
+
+
+### DELETE request | delete request on entity that doesn't exists
 DELETE http://localhost:3000/spaceships/2 HTTP/1.1
 
-# Stellar System Routes
+# -----------------------------------------------------------------
+
+
+
+# /stellar-systems
 
 ### GET
 GET http://localhost:3000/stellar-systems/ HTTP/1.1
