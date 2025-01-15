@@ -31,7 +31,7 @@ router.post('/', async (req: Request, res: Response) => {
 })
 
 router.get('/', async (req: Request, res: Response) => {
-    const repository = database.getRepository(Spaceship);
+    const repository: Repository<Spaceship> = database.getRepository(Spaceship);
 
     try {
         const [spaceships, countSpaceships]: [Spaceship[], number] = await repository.findAndCount();
@@ -54,10 +54,10 @@ router.get('/', async (req: Request, res: Response) => {
 })
 
 router.get('/:id', async (req: Request, res: Response) => {
-    const repository = database.getRepository(Spaceship);
+    const repository: Repository<Spaceship> = database.getRepository(Spaceship);
 
     try {
-        const id: number = parseInt(req.params["id"]);
+        const id: number = parseInt(req.params.id);
         const spaceship: Spaceship = await repository.findOneByOrFail({ id: id });
 
         res.status(HTTPStatus.OK).json({
@@ -77,7 +77,7 @@ router.get('/:id', async (req: Request, res: Response) => {
 })
 
 router.put('/:id', async (req: Request, res: Response) => {
-    const repository = database.getRepository(Spaceship);
+    const repository: Repository<Spaceship> = database.getRepository(Spaceship);
 
     try {
         const id: number = parseInt(req.params.id);
@@ -98,7 +98,7 @@ router.put('/:id', async (req: Request, res: Response) => {
 })
 
 router.delete('/:id', async (req: Request, res: Response) => {
-    const repository = database.getRepository(Spaceship);
+    const repository: Repository<Spaceship> = database.getRepository(Spaceship);
 
     try {
         const id: number = parseInt(req.params.id);
