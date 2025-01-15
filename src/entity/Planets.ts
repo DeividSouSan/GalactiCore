@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
-import { StellarSystem } from "./StellarSystem";
+import { StellarSystem } from "./StellarSystems";
 
 @Entity()
 export class Planet {
