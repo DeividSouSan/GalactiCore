@@ -5,6 +5,7 @@ import { Character } from "../entity/Characters"
 import { Planet } from "../entity/Planets"
 import { Spaceship } from "../entity/Spaceships"
 import dotenv from 'dotenv';
+import { User } from "../entity/User";
 
 dotenv.config()
 
@@ -15,7 +16,7 @@ const AppDataSource = new DataSource({
     username: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
-    entities: [StellarSystem, Character, Planet, Spaceship],
+    entities: [StellarSystem, Character, Planet, Spaceship, User],
     migrations: ["src/migrations/*"],
 })
 
