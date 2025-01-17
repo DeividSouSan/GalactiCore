@@ -3,6 +3,7 @@ import spaceshipRouter from './routes/Spaceship';
 import stellarSystemRouter from './routes/StellarSystem';
 import planetRouter from './routes/Planets';
 import characterRouter from './routes/Characters';
+import registerRouter from './routes/Register';
 import database from './infra/data-source'
 
 const app = express();
@@ -13,6 +14,7 @@ app.use('/spaceships', spaceshipRouter);
 app.use('/stellar-systems', stellarSystemRouter);
 app.use('/planets', planetRouter);
 app.use('/characters', characterRouter);
+app.use(registerRouter);
 
 app.get("/", (req: Request, res: Response) => {
 
