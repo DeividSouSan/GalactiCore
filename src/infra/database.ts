@@ -9,7 +9,7 @@ import { User } from "../entity/User";
 
 dotenv.config()
 
-const AppDataSource = new DataSource({
+export const database = new DataSource({
     type: "mysql",
     host: process.env.MYSQL_HOST,
     port: parseInt(process.env.MYSQL_PORT),
@@ -20,7 +20,7 @@ const AppDataSource = new DataSource({
     migrations: ["src/migrations/*"],
 })
 
-AppDataSource.initialize()
+database.initialize()
     .then(() => {
         console.log("Data Source has been initialized!")
     })
@@ -28,5 +28,5 @@ AppDataSource.initialize()
         console.error("Error during Data Source initialization", err)
     })
 
+export default database;
 
-export default AppDataSource;

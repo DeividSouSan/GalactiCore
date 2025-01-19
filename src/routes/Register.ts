@@ -1,6 +1,6 @@
 import express from 'express';
 import { Request, Response } from 'express';
-import database from '../infra/data-source';
+import database from '../infra/database';
 import { Repository } from 'typeorm';
 import { User } from '../entity/User';
 import HTTPStatus from 'http-status-codes';

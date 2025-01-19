@@ -1,6 +1,6 @@
 import express from 'express';
 import { Request, Response } from 'express';
-import database from '../infra/data-source';
+import database from '../infra/database';
 import { Planet } from '../entity/Planets';
 import { Repository, EntityNotFoundError } from 'typeorm';
 import HTTPStatus from 'http-status-codes';

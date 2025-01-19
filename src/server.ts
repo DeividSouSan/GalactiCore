@@ -4,7 +4,7 @@ import stellarSystemRouter from './routes/StellarSystem';
 import planetRouter from './routes/Planets';
 import characterRouter from './routes/Characters';
 import registerRouter from './routes/Register';
-import database from './infra/data-source'
+import database from './infra/database'
 
 const app = express();
 const PORT = 3000;
