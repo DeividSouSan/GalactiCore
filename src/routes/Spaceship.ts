@@ -27,6 +27,16 @@ class InvalidRequestBody extends Error {
     }
 }
 
+class ResourceNotFound extends Error {
+    public httpStatusCode: number;
+
+    constructor(message = "", ...args: []) {
+        super(message, ...args);
+        this.message = message;
+        this.httpStatusCode = 404;
+    }
+}
+
 router.post('/', async (req: Request, res: Response): Promise<any> => {
     const repository: Repository<Spaceship> = database.getRepository(Spaceship);
 
@@ -107,22 +117,22 @@ router.get('/:id', async (req: Request, res: Response) => {
     }
 })
 
-router.put('/:id', async (req: Request, res: Response) => {
+router.put('/:id', async (req: Request, res: Response): Promise<any> => {
     const repository: Repository<Spaceship> = database.getRepository(Spaceship);
 
     try {
         const id: number = parseInt(req.params.id);
         await repository.update({ id: id }, req.body);
 
-        res.status(HTTPStatus.OK).json({
+        return res.status(HTTPStatus.OK).json({
             "status": "success",
-            "message": "Requisição processada com sucesso",
+            "message": "Spaceship específicada alterada com sucesso.",
             "data": await repository.findOneByOrFail({ id: id })
         })
     } catch {
-        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
+        return res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
             "status": "error",
-            "message": "Erro ao processar a requisição",
+            "message": "Erro ao processar a requisição.",
             "data": {}
         })
     }
@@ -133,20 +143,23 @@ router.delete('/:id', async (req: Request, res: Response) => {
 
     try {
         const id: number = parseInt(req.params.id);
-        const spaceship: Spaceship = await repository.findOneByOrFail({ id: id });
+        const spaceship: Spaceship = await repository.findOneBy({ id: id });
+
+        if (!spaceship) {
+            throw new ResourceNotFound("Spaceship com ID fornecido não existe.");
+        }
+
         await repository.delete({ id: id });
 
         res.status(HTTPStatus.OK).json({
             "status": "success",
-            "message": "Requisição processada com sucesso",
-            "data": {
-                spaceship
-            }
+            "message": "Spaceship deletada com sucesso.",
+            "data": {}
         })
-    } catch {
-        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
+    } catch (err) {
+        res.status(err.httpStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
             "status": "error",
-            "message": "Erro ao processar a requisição",
+            "message": err.message || 'Houve um erro ao processar a requisição.',
             "data": {}
         })
     }

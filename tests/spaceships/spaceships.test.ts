@@ -20,11 +20,12 @@ const database = new DataSource({
 
 beforeAll(async () => {
     await database.initialize();
-    await database.createQueryBuilder().delete().from(Spaceship).execute();
+    await database.dropDatabase();
+    await database.runMigrations();
     await database.destroy();
 });
 
-test('GET_all_spaceships_should_return_200', async () => {
+test('GET_spaceships_should_return_200', async () => {
     const response = await fetch("http://localhost:3000/spaceships/", {
         headers: {
             "Content-Type": 'application/json',
@@ -123,6 +124,71 @@ test('POST_invalid_body_should_return_400', async () => {
     expect(responseBody).toMatchObject({
         status: 'error',
         message: "Corpo da requisição inválido. Nave deve conter: 'model', 'manufacturer' e 'capacity'.",
+        data: {}
+    });
+
+    expect(responseBody.data).toMatchObject({});
+});
+
+test('PUT_spaceship_should_return_200', async () => {
+    const response = await fetch("http://localhost:3000/spaceships/1", {
+        headers: {
+            "Content-Type": 'application/json',
+        },
+        method: "PUT",
+        body: JSON.stringify({
+            "capacity": 1000
+        })
+    })
+
+    expect(response.status).toEqual(200);
+
+    const responseBody = await response.json();
+    console.log(responseBody);
+    expect(responseBody).toMatchObject({
+        status: 'success',
+        message: "Spaceship específicada alterada com sucesso.",
+        data: {}
+    });
+
+    expect(responseBody.data).toMatchObject({
+        capacity: 1000
+    });
+});
+
+test('DELETE_spaceships_with_id_should_return_200', async () => {
+    const response = await fetch("http://localhost:3000/spaceships/1", {
+        headers: {
+            "Content-Type": 'application/json',
+        },
+        method: "DELETE",
+    })
+
+    expect(response.status).toEqual(200);
+
+    const responseBody = await response.json();
+    expect(responseBody).toMatchObject({
+        status: 'success',
+        message: "Spaceship deletada com sucesso.",
+        data: {}
+    });
+
+});
+
+test('DELETE_spaceships_with_wrong_id_should_return_404', async () => {
+    const response = await fetch("http://localhost:3000/spaceships/99", {
+        headers: {
+            "Content-Type": 'application/json',
+        },
+        method: "DELETE",
+    })
+
+    expect(response.status).toEqual(404);
+
+    const responseBody = await response.json();
+    expect(responseBody).toMatchObject({
+        status: 'error',
+        message: "Spaceship com ID fornecido não existe.",
         data: {}
     });
 
