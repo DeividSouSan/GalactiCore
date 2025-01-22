@@ -7,24 +7,55 @@ import HTTPStatus from 'http-status-codes';
 
 const router = express.Router();
 
-router.post('/', async (req: Request, res: Response) => {
+class SpaceshipAleradyExists extends Error {
+    public httpStatusCode: number;
+
+    constructor(message = "", ...args: []) {
+        super(message, ...args);
+        this.message = message;
+        this.httpStatusCode = 406;
+    }
+}
+
+class InvalidRequestBody extends Error {
+    public httpStatusCode: number;
+
+    constructor(message = "", ...args: []) {
+        super(message, ...args);
+        this.message = message;
+        this.httpStatusCode = 400;
+    }
+}
+
+router.post('/', async (req: Request, res: Response): Promise<any> => {
     const repository: Repository<Spaceship> = database.getRepository(Spaceship);
 
     try {
+        const { model, manufacturer, capacity } = req.body;
+        const spaceshipAlreadyExists: boolean = Boolean(await repository.findOneBy({ model: model }))
+
+        if (!model || !manufacturer || !capacity) {
+            throw new InvalidRequestBody("Corpo da requisição inválido. Nave deve conter: 'model', 'manufacturer' e 'capacity'.");
+        }
+
+        if (spaceshipAlreadyExists) {
+            throw new SpaceshipAleradyExists('Nave do modelo fornecido já existe no banco de dados.')
+        }
+
         const spaceship = repository.create(req.body);
         await repository.save(spaceship);
 
-        res.status(HTTPStatus.CREATED).json({
+        return res.status(HTTPStatus.CREATED).json({
             "status": "success",
             "message": "Requisição processada com sucesso",
             "data": {
                 spaceship
             }
         })
-    } catch {
-        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
+    } catch (err) {
+        return res.status(err.httpStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
             "status": "error",
-            "message": "Erro ao processar a requisição",
+            "message": err.message || 'Houve um erro ao processar a requisição',
             "data": {}
         })
     }
