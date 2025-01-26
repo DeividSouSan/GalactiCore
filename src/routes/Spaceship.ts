@@ -37,6 +37,57 @@ class ResourceNotFound extends Error {
     }
 }
 
+router.get('/', async (req: Request, res: Response) => {
+    const repository: Repository<Spaceship> = database.getRepository(Spaceship);
+
+    try {
+        const [spaceships, countSpaceships]: [Spaceship[], number] = await repository.findAndCount();
+
+        res.status(HTTPStatus.OK).json({
+            "status": "success",
+            "message": "Listando todas as spaceships.",
+            "data": {
+                countSpaceships,
+                spaceships
+            }
+        })
+    } catch (err) {
+        console.error(err);
+        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
+            "status": "error",
+            "message": "Erro ao processar a requisição.",
+            "data": {}
+        })
+    }
+})
+
+router.get('/:id', async (req: Request, res: Response) => {
+    const repository: Repository<Spaceship> = database.getRepository(Spaceship);
+
+    try {
+        const id: number = parseInt(req.params.id);
+        const spaceship: Spaceship = await repository.findOneBy({ id: id });
+
+        if (!spaceship) {
+            throw new ResourceNotFound("Spaceship com ID fornecido não foi encontrada.")
+        }
+
+        res.status(HTTPStatus.OK).json({
+            "status": "success",
+            "message": "Mostrando a spaceship com ID fornecido.",
+            "data": {
+                spaceship
+            }
+        })
+    } catch (err) {
+        res.status(err.httpStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
+            "status": "error",
+            "message": err.message || "Erro ao processar a requisição",
+            "data": {}
+        })
+    }
+})
+
 router.post('/', async (req: Request, res: Response): Promise<any> => {
     const repository: Repository<Spaceship> = database.getRepository(Spaceship);
 
@@ -45,11 +96,11 @@ router.post('/', async (req: Request, res: Response): Promise<any> => {
         const spaceshipAlreadyExists: boolean = Boolean(await repository.findOneBy({ model: model }))
 
         if (!model || !manufacturer || !capacity) {
-            throw new InvalidRequestBody("Corpo da requisição inválido. Nave deve conter: 'model', 'manufacturer' e 'capacity'.");
+            throw new InvalidRequestBody("Corpo da requisição inválido. Spaceship deve conter: 'model', 'manufacturer' e 'capacity'.");
         }
 
         if (spaceshipAlreadyExists) {
-            throw new SpaceshipAleradyExists('Nave do modelo fornecido já existe no banco de dados.')
+            throw new SpaceshipAleradyExists('Spaceship do modelo fornecido já existe no banco de dados.')
         }
 
         const spaceship = repository.create(req.body);
@@ -57,7 +108,7 @@ router.post('/', async (req: Request, res: Response): Promise<any> => {
 
         return res.status(HTTPStatus.CREATED).json({
             "status": "success",
-            "message": "Requisição processada com sucesso",
+            "message": "Spaceship criada com sucesso.",
             "data": {
                 spaceship
             }
@@ -71,51 +122,6 @@ router.post('/', async (req: Request, res: Response): Promise<any> => {
     }
 })
 
-router.get('/', async (req: Request, res: Response) => {
-    const repository: Repository<Spaceship> = database.getRepository(Spaceship);
-
-    try {
-        const [spaceships, countSpaceships]: [Spaceship[], number] = await repository.findAndCount();
-
-        res.status(HTTPStatus.OK).json({
-            "status": "success",
-            "message": "Requisição processada com sucesso",
-            "data": {
-                countSpaceships,
-                spaceships
-            }
-        })
-    } catch {
-        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
-            "status": "error",
-            "message": "Erro ao processar a requisição",
-            "data": {}
-        })
-    }
-})
-
-router.get('/:id', async (req: Request, res: Response) => {
-    const repository: Repository<Spaceship> = database.getRepository(Spaceship);
-
-    try {
-        const id: number = parseInt(req.params.id);
-        const spaceship: Spaceship = await repository.findOneByOrFail({ id: id });
-
-        res.status(HTTPStatus.OK).json({
-            "status": "success",
-            "message": "Requisição processada com sucesso",
-            "data": {
-                spaceship
-            }
-        })
-    } catch {
-        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
-            "status": "error",
-            "message": "Erro ao processar a requisição",
-            "data": {}
-        })
-    }
-})
 
 router.put('/:id', async (req: Request, res: Response): Promise<any> => {
     const repository: Repository<Spaceship> = database.getRepository(Spaceship);

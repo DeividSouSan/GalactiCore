@@ -33,13 +33,12 @@ test('GET_spaceships_should_return_200', async () => {
         method: "GET",
     })
 
-
     expect(response.status).toEqual(200);
 
     const responseBody = await response.json();
     expect(responseBody).toMatchObject({
         status: 'success',
-        message: 'Requisição processada com sucesso',
+        message: 'Listando todas as spaceships.',
         data: {}
     });
 
@@ -49,6 +48,7 @@ test('GET_spaceships_should_return_200', async () => {
     });
 
     expect(responseBody.data.spaceships.length).toEqual(0);
+    expect(responseBody.data.spaceships.length).toEqual(responseBody.data.countSpaceships);
 });
 
 
@@ -70,7 +70,7 @@ test('POST_spaceship_should_return_201', async () => {
     const responseBody = await response.json();
     expect(responseBody).toMatchObject({
         status: 'success',
-        message: 'Requisição processada com sucesso',
+        message: 'Spaceship criada com sucesso.',
         data: {}
     });
 
@@ -80,6 +80,55 @@ test('POST_spaceship_should_return_201', async () => {
         capacity: 10,
     });
 });
+
+test('GET_spaceships_with_id_should_return_200', async () => {
+    const response = await fetch("http://localhost:3000/spaceships/1", {
+        headers: {
+            "Content-Type": 'application/json',
+        },
+        method: "GET",
+    })
+
+
+    expect(response.status).toEqual(200);
+
+    const responseBody = await response.json();
+    expect(responseBody).toMatchObject({
+        status: 'success',
+        message: 'Mostrando a spaceship com ID fornecido.',
+        data: {}
+    });
+
+    expect(responseBody.data).toMatchObject({
+        spaceship: {
+            id: 1,
+            model: "AAAA",
+            manufacturer: "BBBB",
+            capacity: 10,
+        }
+    });
+});
+
+test('GET_spaceships_that_doesnt_exist_should_return_200', async () => {
+    const response = await fetch("http://localhost:3000/spaceships/99", {
+        headers: {
+            "Content-Type": 'application/json',
+        },
+        method: "GET",
+    })
+
+    expect(response.status).toEqual(404);
+
+    const responseBody = await response.json();
+    expect(responseBody).toMatchObject({
+        status: 'error',
+        message: 'Spaceship com ID fornecido não foi encontrada.',
+        data: {}
+    });
+
+    expect(responseBody.data).toMatchObject({});
+});
+
 
 test('POST_repeated_model_should_return_406', async () => {
     const response = await fetch("http://localhost:3000/spaceships/", {
@@ -99,7 +148,7 @@ test('POST_repeated_model_should_return_406', async () => {
     const responseBody = await response.json();
     expect(responseBody).toMatchObject({
         status: 'error',
-        message: 'Nave do modelo fornecido já existe no banco de dados.',
+        message: 'Spaceship do modelo fornecido já existe no banco de dados.',
         data: {}
     });
 
@@ -123,7 +172,7 @@ test('POST_invalid_body_should_return_400', async () => {
     const responseBody = await response.json();
     expect(responseBody).toMatchObject({
         status: 'error',
-        message: "Corpo da requisição inválido. Nave deve conter: 'model', 'manufacturer' e 'capacity'.",
+        message: "Corpo da requisição inválido. Spaceship deve conter: 'model', 'manufacturer' e 'capacity'.",
         data: {}
     });
 
