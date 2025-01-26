@@ -9,7 +9,7 @@ import { User } from "../entity/User";
 
 dotenv.config()
 
-export const database = new DataSource({
+const database = new DataSource({
     type: "mysql",
     host: process.env.MYSQL_HOST,
     port: parseInt(process.env.MYSQL_PORT),

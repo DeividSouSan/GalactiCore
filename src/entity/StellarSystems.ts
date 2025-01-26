@@ -1,7 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Unique } from "typeorm";
 import { Planet } from "./Planets";
 
 @Entity()
+@Unique(["name"])
 export class StellarSystem {
     @PrimaryGeneratedColumn()
     id: number
