@@ -77,7 +77,6 @@ test('POST_stellar_system_should_return_201', async () => {
         id: 1,
         name: "Terra",
         description: "Quente.",
-        planets: []
     });
 });
 
@@ -100,16 +99,13 @@ test('GET_stellar_systems_with_id_should_return_200', async () => {
     });
 
     expect(responseBody.data).toMatchObject({
-        stellar_system: {
-            id: 1,
-            name: "Terra",
-            description: "Quente.",
-            planets: []
-        }
+        id: 1,
+        name: "Terra",
+        description: "Quente.",
     });
 });
 
-test('GET_stellar_system_that_doesnt_exist_should_return_404', async () => {
+test('GET_invalid_stellar_system_should_return_404', async () => {
     const response = await fetch("http://localhost:3000/stellar-systems/99", {
         headers: {
             "Content-Type": 'application/json',
@@ -126,7 +122,7 @@ test('GET_stellar_system_that_doesnt_exist_should_return_404', async () => {
         data: {}
     });
 
-    expect(responseBody.data).toMatchObject({});
+    expect(Object.keys(responseBody.data).length).toEqual(0);
 });
 
 
@@ -151,17 +147,19 @@ test('POST_repeated_stellar_system_should_return_406', async () => {
         data: {}
     });
 
-    expect(responseBody.data).toMatchObject({});
+    expect(Object.keys(responseBody.data).length).toEqual(0);
 });
 
-test('POST_invalid_body_should_return_400', async () => {
-    const response = await fetch("http://localhost:3000/stellarSystems/", {
+test('POST_body_invalid_values_should_return_400', async () => {
+    const response = await fetch("http://localhost:3000/stellar-systems/", {
         headers: {
             "Content-Type": 'application/json',
         },
         method: "POST",
         body: JSON.stringify({
-            "name": "Terra"
+            "name": "Solar",
+            "description": "Agua",
+            "planets": ["Marte"]
         })
     })
 
@@ -170,41 +168,114 @@ test('POST_invalid_body_should_return_400', async () => {
     const responseBody = await response.json();
     expect(responseBody).toMatchObject({
         status: 'error',
-        message: "Corpo da requisição inválido. Stellar system deve conter: 'name' e 'description'.",
+        message: "Corpo da requisição inválido. Stellar system deve conter somente 'name' e 'description'.",
+        data: {}
+    });
+
+    expect(Object.keys(responseBody.data).length).toEqual(0);
+});
+
+test('POST_body_with_missing_values_should_return_400', async () => {
+    const response = await fetch("http://localhost:3000/stellar-systems/", {
+        headers: {
+            "Content-Type": 'application/json',
+        },
+        method: "POST",
+        body: JSON.stringify({
+            "name": "Terra",
+            // missing description
+        })
+    })
+
+    expect(response.status).toEqual(400);
+
+    const responseBody = await response.json();
+    expect(responseBody).toMatchObject({
+        status: 'error',
+        message: "Corpo da requisição inválido. Stellar system deve conter somente 'name' e 'description'.",
         data: {}
     });
 
     expect(responseBody.data).toMatchObject({});
 });
 
-test('PUT_stellar_system_should_return_200', async () => {
-    const response = await fetch("http://localhost:3000/stellarSystems/1", {
+test('PUT_invalid_stellar_system_should_return_404', async () => {
+    const response = await fetch("http://localhost:3000/stellar-systems/99", {
         headers: {
             "Content-Type": 'application/json',
         },
         method: "PUT",
         body: JSON.stringify({
-            "name": "Marte"
+            "name": "Andromeda"
+        })
+    })
+
+    expect(response.status).toEqual(404);
+
+    const responseBody = await response.json();
+    expect(responseBody).toMatchObject({
+        status: 'error',
+        message: "Stellar system com ID fornecido não foi encontrado.",
+        data: {}
+    });
+
+    expect(Object.keys(responseBody.data).length).toEqual(0);
+});
+
+test('PUT_stellar_system_should_return_200', async () => {
+    const response = await fetch("http://localhost:3000/stellar-systems/1", {
+        headers: {
+            "Content-Type": 'application/json',
+        },
+        method: "PUT",
+        body: JSON.stringify({
+            "name": "Andromeda",
+            description: "Distante",
         })
     })
 
     expect(response.status).toEqual(200);
 
     const responseBody = await response.json();
-    console.log(responseBody);
     expect(responseBody).toMatchObject({
         status: 'success',
-        message: "Stellar system específicado alterada com sucesso.",
+        message: "Stellar system específicado alterado com sucesso.",
         data: {}
     });
 
     expect(responseBody.data).toMatchObject({
-        name: "Marte"
+        name: "Andromeda",
+        description: "Distante",
     });
 });
 
+test('PUT_invalid_body_should_return_200', async () => {
+    const response = await fetch("http://localhost:3000/stellar-systems/1", {
+        headers: {
+            "Content-Type": 'application/json',
+        },
+        method: "PUT",
+        body: JSON.stringify({
+            "teste": 50,
+        })
+    })
+
+    expect(response.status).toEqual(400);
+
+    const responseBody = await response.json();
+    console.log(responseBody);
+    expect(responseBody).toMatchObject({
+        status: 'error',
+        message: "Corpo da requisição inválido. Stellar system deve conter somente 'name' e 'description'.",
+        data: {}
+    });
+
+    expect(Object.keys(responseBody.data).length).toEqual(0);
+});
+
+
 test('DELETE_stellar_system_with_id_should_return_200', async () => {
-    const response = await fetch("http://localhost:3000/stellarSystems/1", {
+    const response = await fetch("http://localhost:3000/stellar-systems/1", {
         headers: {
             "Content-Type": 'application/json',
         },
@@ -216,14 +287,15 @@ test('DELETE_stellar_system_with_id_should_return_200', async () => {
     const responseBody = await response.json();
     expect(responseBody).toMatchObject({
         status: 'success',
-        message: "Stellar system deletado com sucesso.",
+        message: "Stellar system especificado deletado com sucesso.",
         data: {}
     });
 
+    expect(Object.keys(responseBody.data).length).toEqual(0);
 });
 
-test('DELETE_stellar_system_with_wrong_id_should_return_404', async () => {
-    const response = await fetch("http://localhost:3000/stellarSystems/99", {
+test('DELETE_invalid_stellar_system_should_return_404', async () => {
+    const response = await fetch("http://localhost:3000/stellar-systems/99", {
         headers: {
             "Content-Type": 'application/json',
         },
@@ -239,5 +311,5 @@ test('DELETE_stellar_system_with_wrong_id_should_return_404', async () => {
         data: {}
     });
 
-    expect(responseBody.data).toMatchObject({});
+    expect(Object.keys(responseBody.data).length).toEqual(0);
 });

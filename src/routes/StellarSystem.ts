@@ -4,123 +4,150 @@ import database from '../infra/database'
 import { Repository } from 'typeorm';
 import { StellarSystem } from '../entity/StellarSystems';
 import HTTPStatus from 'http-status-codes';
+import { InvalidRequestBody, ResourceAlreadyExists, ResourceNotFound } from '../infra/errors';
 
-const router = express.Router()
+const router = express.Router();
 
-router.post("/", async (req: Request, res: Response) => {
-    const repository: Repository<StellarSystem> = database.getRepository(StellarSystem);
-
-    try {
-        const stellarSystem = repository.create(req.body);
-        await repository.save(stellarSystem);
-
-        res.status(HTTPStatus.CREATED).json({
-            "status": "success",
-            "message": "Requisição processada com sucesso",
-            "data": {
-                stellarSystem
-            }
-        })
-    } catch {
-        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
-            "status": "error",
-            "message": "Erro ao processar a requisição",
-            "data": {}
-        })
-    }
-})
-
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response): Promise<any> => {
     const repository: Repository<StellarSystem> = database.getRepository(StellarSystem);
 
     try {
         const [stellarSystems, countStellarSystems]: [StellarSystem[], number] = await repository.findAndCount();
 
-        res.status(HTTPStatus.OK).json({
+        return res.status(HTTPStatus.OK).json({
             "status": "success",
-            "message": "Requisição processada com sucesso",
+            "message": "Listando todos os stellar systems.",
             "data": {
-                countStellarSystems,
-                stellarSystems
+                "count_stellar_systems": countStellarSystems,
+                "stellar_systems": stellarSystems
             }
         })
-    } catch {
-        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
+    } catch (err) {
+        console.error(err);
+        return res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
             "status": "error",
-            "message": "Erro ao processar a requisição",
+            "message": "Erro ao processar a requisição.",
             "data": {}
         })
     }
 })
 
-router.get("/:id", async (req: Request, res: Response) => {
+
+router.get("/:id", async (req: Request, res: Response): Promise<any> => {
     const repository: Repository<StellarSystem> = database.getRepository(StellarSystem);
 
     try {
         const id: number = parseInt(req.params.id);
-        const stellarSystem: StellarSystem = await repository.findOneByOrFail({ id: id });
+        const stellarSystem: StellarSystem = await repository.findOneBy({ id: id });
 
-        res.status(HTTPStatus.OK).json({
+        if (!stellarSystem) {
+            throw new ResourceNotFound("Stellar system com ID fornecido não foi encontrado.")
+        }
+
+        return res.status(HTTPStatus.OK).json({
             "status": "success",
-            "message": "Requisição processada com sucesso",
-            "data": {
-                stellarSystem
-            }
+            "message": "Mostrando o stellar system com ID fornecido.",
+            "data": stellarSystem
         })
-    } catch {
-        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
+    } catch (err) {
+        console.error(err);
+        return res.status(err.httpStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
             "status": "error",
-            "message": "Erro ao processar a requisição",
+            "message": err.message || "Erro ao processar a requisição",
             "data": {}
         })
     }
-
 })
 
-router.put("/:id", async (req: Request, res: Response) => {
+router.post("/", async (req: Request, res: Response): Promise<any> => {
+    const repository: Repository<StellarSystem> = database.getRepository(StellarSystem);
+
+    try {
+        const { name, description, ...rest } = req.body;
+        if (!name || !description || Object.keys(rest).length > 0) {
+            throw new InvalidRequestBody("Corpo da requisição inválido. Stellar system deve conter somente 'name' e 'description'.");
+        }
+
+        const alreadyExistsStellarSystem: boolean = Boolean(await repository.findOneBy({ name: name }));
+        if (alreadyExistsStellarSystem) {
+            throw new ResourceAlreadyExists("Stellar system com o nome fornecido já existe no banco de dados.");
+        }
+
+        const stellarSystem: StellarSystem[] = repository.create(req.body);
+        await repository.save(stellarSystem);
+
+        return res.status(HTTPStatus.CREATED).json({
+            "status": "success",
+            "message": "Stellar system criado com sucesso.",
+            "data": stellarSystem
+        })
+    } catch (err) {
+        console.error(err);
+        return res.status(err.httpStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
+            "status": "error",
+            "message": err.message || "Erro ao processar a requisição",
+            "data": {}
+        })
+    }
+})
+
+router.put("/:id", async (req: Request, res: Response): Promise<any> => {
     const repository: Repository<StellarSystem> = database.getRepository(StellarSystem);
 
     try {
         const id: number = parseInt(req.params.id);
+        const stellarSystem: StellarSystem = await repository.findOneBy({ id: id });
+        if (!stellarSystem) {
+            throw new ResourceNotFound("Stellar system com ID fornecido não foi encontrado.");
+        }
+
+        const { name, description, ...rest } = req.body;
+        if ((!name && !description) || Object.keys(rest).length > 0) {
+            throw new InvalidRequestBody("Corpo da requisição inválido. Stellar system deve conter somente 'name' e 'description'.");
+        }
+
         await repository.update({ id: id }, req.body);
 
-        res.status(HTTPStatus.OK).json({
+        return res.status(HTTPStatus.OK).json({
             "status": "success",
-            "message": "Requisição processada com sucesso",
+            "message": "Stellar system específicado alterado com sucesso.",
             "data": await repository.findOneByOrFail({ id: id })
         })
-    } catch {
-        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
+    } catch (err) {
+        console.error(err);
+        return res.status(err.httpStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
             "status": "error",
-            "message": "Erro ao processar a requisição",
+            "message": err.message || "Erro ao processar a requisição",
             "data": {}
         })
     }
 })
 
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/:id", async (req: Request, res: Response): Promise<any> => {
     const repository: Repository<StellarSystem> = database.getRepository(StellarSystem);
 
     try {
         const id: number = parseInt(req.params.id);
-        const stellarSystem: StellarSystem = await repository.findOneByOrFail({ id: id });
+        const stellarSystem: StellarSystem = await repository.findOneBy({ id: id });
+        if (!stellarSystem) {
+            throw new ResourceNotFound("Stellar system com ID fornecido não existe.");
+        }
+
         await repository.delete({ id: id });
 
-        res.status(HTTPStatus.OK).json({
+        return res.status(HTTPStatus.OK).json({
             "status": "success",
-            "message": "Requisição processada com sucesso",
-            "data": {
-                stellarSystem
-            }
+            "message": "Stellar system especificado deletado com sucesso.",
+            "data": {}
         })
-    } catch {
-        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
+    } catch (err) {
+        console.error(err);
+        return res.status(err.httpStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
             "status": "error",
-            "message": "Erro ao processar a requisição",
+            "message": err.message || "Erro ao processar a requisição",
             "data": {}
         })
     }
 })
-
 
 export default router;
