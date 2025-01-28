@@ -71,12 +71,30 @@ Ferramentas e Tecnologias
   <img src="https://img.shields.io/badge/Beekeeper%20Studio-FAD83B?logo=beekeeperstudio&logoColor=000&style=for-the-badge" alt='Linguagem mais utilizada' />
   <img src="https://img.shields.io/badge/Git-F05032?logo=git&logoColor=fff&style=for-the-badge" alt='Linguagem mais utilizada' />
   <img src="https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white" alt='Linguagem mais utilizada' />
-<section align="center">
-  
+</section>
+
 <h2>
 Arquitetura do Projeto
 </h2>
-  ...
+
+```plaintext
+src/
+├── infra/
+│   ├── entities/
+│   │   └── ...
+│   ├── migrations/
+│   │   └── ...
+│   ├── database.ts
+│   └── error.ts
+└── routes/
+    └── ...
+test/
+└── integration/
+    ├── Spaceships.test.ts
+    └── StellarSystems.test.ts
+...
+```
+
 <h2>
   Como rodar
 </h2>
