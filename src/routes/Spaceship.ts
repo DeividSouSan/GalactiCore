@@ -4,38 +4,9 @@ import database from '../infra/database';
 import { Spaceship } from '../entity/Spaceships';
 import { Repository } from 'typeorm';
 import HTTPStatus from 'http-status-codes';
+import { ResourceNotFound, InvalidRequestBody, ResourceAlreadyExists } from '../infra/errors';
 
 const router = express.Router();
-
-class SpaceshipAleradyExists extends Error {
-    public httpStatusCode: number;
-
-    constructor(message = "", ...args: []) {
-        super(message, ...args);
-        this.message = message;
-        this.httpStatusCode = 406;
-    }
-}
-
-class InvalidRequestBody extends Error {
-    public httpStatusCode: number;
-
-    constructor(message = "", ...args: []) {
-        super(message, ...args);
-        this.message = message;
-        this.httpStatusCode = 400;
-    }
-}
-
-class ResourceNotFound extends Error {
-    public httpStatusCode: number;
-
-    constructor(message = "", ...args: []) {
-        super(message, ...args);
-        this.message = message;
-        this.httpStatusCode = 404;
-    }
-}
 
 router.get('/', async (req: Request, res: Response) => {
     const repository: Repository<Spaceship> = database.getRepository(Spaceship);
@@ -100,7 +71,7 @@ router.post('/', async (req: Request, res: Response): Promise<any> => {
         }
 
         if (spaceshipAlreadyExists) {
-            throw new SpaceshipAleradyExists('Spaceship do modelo fornecido já existe no banco de dados.')
+            throw new ResourceAlreadyExists('Spaceship do modelo fornecido já existe no banco de dados.')
         }
 
         const spaceship = repository.create(req.body);
