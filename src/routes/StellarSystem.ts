@@ -2,7 +2,7 @@ import express from 'express';
 import { Request, Response } from 'express';
 import database from '../infra/database'
 import { Repository } from 'typeorm';
-import { StellarSystem } from '../entity/StellarSystems';
+import { StellarSystem } from '../infra/entities/StellarSystems';
 import HTTPStatus from 'http-status-codes';
 import { InvalidRequestBody, ResourceAlreadyExists, ResourceNotFound } from '../infra/errors';
 

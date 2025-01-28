@@ -1,11 +1,11 @@
 import { DataSource } from "typeorm"
 import "reflect-metadata";
-import { StellarSystem } from "../entity/StellarSystems"
-import { Character } from "../entity/Characters"
-import { Planet } from "../entity/Planets"
-import { Spaceship } from "../entity/Spaceships"
+import { StellarSystem } from "./entities/StellarSystems"
+import { Character } from "./entities/Characters"
+import { Planet } from "./entities/Planets"
+import { Spaceship } from "./entities/Spaceships"
 import dotenv from 'dotenv';
-import { User } from "../entity/User";
+import { User } from "./entities/User";
 
 dotenv.config()
 
@@ -17,7 +17,7 @@ const database = new DataSource({
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
     entities: [StellarSystem, Character, Planet, Spaceship, User],
-    migrations: ["src/migrations/*"],
+    migrations: ["src/infra/migrations/*"],
 })
 
 database.initialize()

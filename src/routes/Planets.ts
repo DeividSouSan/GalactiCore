@@ -1,7 +1,7 @@
 import express from 'express';
 import { Request, Response } from 'express';
 import database from '../infra/database';
-import { Planet } from '../entity/Planets';
+import { Planet } from '../infra/entities/Planets';
 import { Repository, EntityNotFoundError } from 'typeorm';
 import HTTPStatus from 'http-status-codes';
 

@@ -1,9 +1,9 @@
 import { DataSource } from 'typeorm';
-import { Spaceship } from '../../src/entity/Spaceships';
-import { StellarSystem } from '../../src/entity/StellarSystems';
-import { Character } from '../../src/entity/Characters';
-import { Planet } from '../../src/entity/Planets';
-import { User } from '../../src/entity/User';
+import { Spaceship } from '../../src/infra/entities/Spaceships';
+import { StellarSystem } from '../../src/infra/entities/StellarSystems';
+import { Character } from '../../src/infra/entities/Characters';
+import { Planet } from '../../src/infra/entities/Planets';
+import { User } from '../../src/infra/entities/User';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -15,7 +15,7 @@ const database = new DataSource({
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
     entities: [StellarSystem, Character, Planet, Spaceship, User],
-    migrations: ["src/migrations/*"],
+    migrations: ["src/infra/migrations/*"],
 })
 
 beforeAll(async () => {

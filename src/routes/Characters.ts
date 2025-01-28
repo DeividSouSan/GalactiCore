@@ -2,7 +2,7 @@ import express from 'express';
 import { Request, Response } from 'express';
 import database from '../infra/database'
 import { Repository } from 'typeorm';
-import { Character } from '../entity/Characters';
+import { Character } from '../infra/entities/Characters';
 import HTTPStatus from 'http-status-codes';
 
 const router = express.Router()
