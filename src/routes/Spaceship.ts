@@ -8,7 +8,7 @@ import { ResourceNotFound, InvalidRequestBody, ResourceAlreadyExists } from '../
 
 const router = express.Router();
 
-router.get('/', async (req: Request, res: Response) => {
+router.get('/spaceships', async (req: Request, res: Response) => {
     const repository: Repository<Spaceship> = database.getRepository(Spaceship);
 
     try {
@@ -32,7 +32,7 @@ router.get('/', async (req: Request, res: Response) => {
     }
 })
 
-router.get('/:id', async (req: Request, res: Response) => {
+router.get('/spaceships/:id', async (req: Request, res: Response) => {
     const repository: Repository<Spaceship> = database.getRepository(Spaceship);
 
     try {
@@ -59,7 +59,7 @@ router.get('/:id', async (req: Request, res: Response) => {
     }
 })
 
-router.post('/', async (req: Request, res: Response): Promise<any> => {
+router.post('/spaceships', async (req: Request, res: Response): Promise<any> => {
     const repository: Repository<Spaceship> = database.getRepository(Spaceship);
 
     try {
@@ -94,7 +94,7 @@ router.post('/', async (req: Request, res: Response): Promise<any> => {
 })
 
 
-router.put('/:id', async (req: Request, res: Response): Promise<any> => {
+router.put('/spaceships/:id', async (req: Request, res: Response): Promise<any> => {
     const repository: Repository<Spaceship> = database.getRepository(Spaceship);
 
     try {
@@ -115,7 +115,7 @@ router.put('/:id', async (req: Request, res: Response): Promise<any> => {
     }
 })
 
-router.delete('/:id', async (req: Request, res: Response) => {
+router.delete('/spaceships/:id', async (req: Request, res: Response) => {
     const repository: Repository<Spaceship> = database.getRepository(Spaceship);
 
     try {

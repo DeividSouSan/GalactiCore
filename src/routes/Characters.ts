@@ -7,30 +7,7 @@ import HTTPStatus from 'http-status-codes';
 
 const router = express.Router()
 
-router.post("/", async (req: Request, res: Response) => {
-    const repository: Repository<Character> = database.getRepository(Character);
-
-    try {
-        const character = repository.create(req.body);
-        await repository.save(character);
-
-        res.status(HTTPStatus.CREATED).json({
-            "status": "success",
-            "message": "Requisição processada com sucesso",
-            "data": {
-                character
-            }
-        })
-    } catch {
-        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
-            "status": "error",
-            "message": "Erro ao processar a requisição",
-            "data": {}
-        })
-    }
-})
-
-router.get("/", async (req: Request, res: Response) => {
+router.get("/characters", async (req: Request, res: Response) => {
     const repository: Repository<Character> = database.getRepository(Character);
 
     try {
@@ -53,7 +30,7 @@ router.get("/", async (req: Request, res: Response) => {
     }
 })
 
-router.get("/:id", async (req: Request, res: Response) => {
+router.get("/characters/:id", async (req: Request, res: Response) => {
     const repository: Repository<Character> = database.getRepository(Character);
 
     try {
@@ -77,7 +54,30 @@ router.get("/:id", async (req: Request, res: Response) => {
 
 })
 
-router.put("/:id", async (req: Request, res: Response) => {
+router.post("/characters", async (req: Request, res: Response) => {
+    const repository: Repository<Character> = database.getRepository(Character);
+
+    try {
+        const character = repository.create(req.body);
+        await repository.save(character);
+
+        res.status(HTTPStatus.CREATED).json({
+            "status": "success",
+            "message": "Requisição processada com sucesso",
+            "data": {
+                character
+            }
+        })
+    } catch {
+        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
+            "status": "error",
+            "message": "Erro ao processar a requisição",
+            "data": {}
+        })
+    }
+})
+
+router.put("/characters/:id", async (req: Request, res: Response) => {
     const repository: Repository<Character> = database.getRepository(Character);
 
     try {
@@ -98,7 +98,7 @@ router.put("/:id", async (req: Request, res: Response) => {
     }
 })
 
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/characters/:id", async (req: Request, res: Response) => {
     const repository: Repository<Character> = database.getRepository(Character);
 
     try {

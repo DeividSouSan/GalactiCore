@@ -10,10 +10,10 @@ const app = express();
 const PORT = 3000;
 
 app.use(express.json());
-app.use('/spaceships', spaceshipRouter);
-app.use('/stellar-systems', stellarSystemRouter);
-app.use('/planets', planetRouter);
-app.use('/characters', characterRouter);
+app.use('/api/v1', spaceshipRouter);
+app.use('/api/v1', stellarSystemRouter);
+app.use('/api/v1', planetRouter);
+app.use('/api/v1', characterRouter);
 app.use(registerRouter);
 
 app.get("/", (req: Request, res: Response) => {

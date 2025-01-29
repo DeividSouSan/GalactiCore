@@ -8,7 +8,7 @@ import { InvalidRequestBody, ResourceAlreadyExists, ResourceNotFound } from '../
 
 const router = express.Router();
 
-router.get("/", async (req: Request, res: Response): Promise<any> => {
+router.get("/stellar-systems", async (req: Request, res: Response): Promise<any> => {
     const repository: Repository<StellarSystem> = database.getRepository(StellarSystem);
 
     try {
@@ -33,7 +33,7 @@ router.get("/", async (req: Request, res: Response): Promise<any> => {
 })
 
 
-router.get("/:id", async (req: Request, res: Response): Promise<any> => {
+router.get("/stellar-systems/:id", async (req: Request, res: Response): Promise<any> => {
     const repository: Repository<StellarSystem> = database.getRepository(StellarSystem);
 
     try {
@@ -59,7 +59,7 @@ router.get("/:id", async (req: Request, res: Response): Promise<any> => {
     }
 })
 
-router.post("/", async (req: Request, res: Response): Promise<any> => {
+router.post("/stellar-systems", async (req: Request, res: Response): Promise<any> => {
     const repository: Repository<StellarSystem> = database.getRepository(StellarSystem);
 
     try {
@@ -91,7 +91,7 @@ router.post("/", async (req: Request, res: Response): Promise<any> => {
     }
 })
 
-router.put("/:id", async (req: Request, res: Response): Promise<any> => {
+router.put("/stellar-systems/:id", async (req: Request, res: Response): Promise<any> => {
     const repository: Repository<StellarSystem> = database.getRepository(StellarSystem);
 
     try {
@@ -123,7 +123,7 @@ router.put("/:id", async (req: Request, res: Response): Promise<any> => {
     }
 })
 
-router.delete("/:id", async (req: Request, res: Response): Promise<any> => {
+router.delete("/stellar-systems/:id", async (req: Request, res: Response): Promise<any> => {
     const repository: Repository<StellarSystem> = database.getRepository(StellarSystem);
 
     try {

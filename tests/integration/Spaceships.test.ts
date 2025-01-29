@@ -26,7 +26,7 @@ beforeAll(async () => {
 });
 
 test('GET_spaceships_should_return_200', async () => {
-    const response = await fetch("http://localhost:3000/spaceships/", {
+    const response = await fetch("http://localhost:3000/api/v1/spaceships/", {
         headers: {
             "Content-Type": 'application/json',
         },
@@ -53,7 +53,7 @@ test('GET_spaceships_should_return_200', async () => {
 
 
 test('POST_spaceship_should_return_201', async () => {
-    const response = await fetch("http://localhost:3000/spaceships/", {
+    const response = await fetch("http://localhost:3000/api/v1/spaceships/", {
         headers: {
             "Content-Type": 'application/json',
         },
@@ -82,7 +82,7 @@ test('POST_spaceship_should_return_201', async () => {
 });
 
 test('GET_spaceships_with_id_should_return_200', async () => {
-    const response = await fetch("http://localhost:3000/spaceships/1", {
+    const response = await fetch("http://localhost:3000/api/v1/spaceships/1", {
         headers: {
             "Content-Type": 'application/json',
         },
@@ -110,7 +110,7 @@ test('GET_spaceships_with_id_should_return_200', async () => {
 });
 
 test('GET_spaceships_that_doesnt_exist_should_return_200', async () => {
-    const response = await fetch("http://localhost:3000/spaceships/99", {
+    const response = await fetch("http://localhost:3000/api/v1/spaceships/99", {
         headers: {
             "Content-Type": 'application/json',
         },
@@ -131,7 +131,7 @@ test('GET_spaceships_that_doesnt_exist_should_return_200', async () => {
 
 
 test('POST_repeated_model_should_return_406', async () => {
-    const response = await fetch("http://localhost:3000/spaceships/", {
+    const response = await fetch("http://localhost:3000/api/v1/spaceships/", {
         headers: {
             "Content-Type": 'application/json',
         },
@@ -156,7 +156,7 @@ test('POST_repeated_model_should_return_406', async () => {
 });
 
 test('POST_invalid_body_should_return_400', async () => {
-    const response = await fetch("http://localhost:3000/spaceships/", {
+    const response = await fetch("http://localhost:3000/api/v1/spaceships/", {
         headers: {
             "Content-Type": 'application/json',
         },
@@ -180,7 +180,7 @@ test('POST_invalid_body_should_return_400', async () => {
 });
 
 test('PUT_spaceship_should_return_200', async () => {
-    const response = await fetch("http://localhost:3000/spaceships/1", {
+    const response = await fetch("http://localhost:3000/api/v1/spaceships/1", {
         headers: {
             "Content-Type": 'application/json',
         },
@@ -206,7 +206,7 @@ test('PUT_spaceship_should_return_200', async () => {
 });
 
 test('DELETE_spaceships_with_id_should_return_200', async () => {
-    const response = await fetch("http://localhost:3000/spaceships/1", {
+    const response = await fetch("http://localhost:3000/api/v1/spaceships/1", {
         headers: {
             "Content-Type": 'application/json',
         },
@@ -225,7 +225,7 @@ test('DELETE_spaceships_with_id_should_return_200', async () => {
 });
 
 test('DELETE_spaceships_with_wrong_id_should_return_404', async () => {
-    const response = await fetch("http://localhost:3000/spaceships/99", {
+    const response = await fetch("http://localhost:3000/api/v1/spaceships/99", {
         headers: {
             "Content-Type": 'application/json',
         },

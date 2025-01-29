@@ -26,7 +26,7 @@ beforeAll(async () => {
 });
 
 test('GET_stellar_system_should_return_200', async () => {
-    const response = await fetch("http://localhost:3000/stellar-systems/", {
+    const response = await fetch("http://localhost:3000/api/v1/stellar-systems/", {
         headers: {
             "Content-Type": 'application/json',
         },
@@ -53,7 +53,7 @@ test('GET_stellar_system_should_return_200', async () => {
 
 
 test('POST_stellar_system_should_return_201', async () => {
-    const response = await fetch("http://localhost:3000/stellar-systems/", {
+    const response = await fetch("http://localhost:3000/api/v1/stellar-systems/", {
         headers: {
             "Content-Type": 'application/json',
         },
@@ -81,7 +81,7 @@ test('POST_stellar_system_should_return_201', async () => {
 });
 
 test('GET_stellar_systems_with_id_should_return_200', async () => {
-    const response = await fetch("http://localhost:3000/stellar-systems/1", {
+    const response = await fetch("http://localhost:3000/api/v1/stellar-systems/1", {
         headers: {
             "Content-Type": 'application/json',
         },
@@ -106,7 +106,7 @@ test('GET_stellar_systems_with_id_should_return_200', async () => {
 });
 
 test('GET_invalid_stellar_system_should_return_404', async () => {
-    const response = await fetch("http://localhost:3000/stellar-systems/99", {
+    const response = await fetch("http://localhost:3000/api/v1/stellar-systems/99", {
         headers: {
             "Content-Type": 'application/json',
         },
@@ -127,7 +127,7 @@ test('GET_invalid_stellar_system_should_return_404', async () => {
 
 
 test('POST_repeated_stellar_system_should_return_406', async () => {
-    const response = await fetch("http://localhost:3000/stellar-systems/", {
+    const response = await fetch("http://localhost:3000/api/v1/stellar-systems/", {
         headers: {
             "Content-Type": 'application/json',
         },
@@ -151,7 +151,7 @@ test('POST_repeated_stellar_system_should_return_406', async () => {
 });
 
 test('POST_body_invalid_values_should_return_400', async () => {
-    const response = await fetch("http://localhost:3000/stellar-systems/", {
+    const response = await fetch("http://localhost:3000/api/v1/stellar-systems/", {
         headers: {
             "Content-Type": 'application/json',
         },
@@ -176,7 +176,7 @@ test('POST_body_invalid_values_should_return_400', async () => {
 });
 
 test('POST_body_with_missing_values_should_return_400', async () => {
-    const response = await fetch("http://localhost:3000/stellar-systems/", {
+    const response = await fetch("http://localhost:3000/api/v1/stellar-systems/", {
         headers: {
             "Content-Type": 'application/json',
         },
@@ -200,7 +200,7 @@ test('POST_body_with_missing_values_should_return_400', async () => {
 });
 
 test('PUT_invalid_stellar_system_should_return_404', async () => {
-    const response = await fetch("http://localhost:3000/stellar-systems/99", {
+    const response = await fetch("http://localhost:3000/api/v1/stellar-systems/99", {
         headers: {
             "Content-Type": 'application/json',
         },
@@ -223,7 +223,7 @@ test('PUT_invalid_stellar_system_should_return_404', async () => {
 });
 
 test('PUT_stellar_system_should_return_200', async () => {
-    const response = await fetch("http://localhost:3000/stellar-systems/1", {
+    const response = await fetch("http://localhost:3000/api/v1/stellar-systems/1", {
         headers: {
             "Content-Type": 'application/json',
         },
@@ -250,7 +250,7 @@ test('PUT_stellar_system_should_return_200', async () => {
 });
 
 test('PUT_invalid_body_should_return_200', async () => {
-    const response = await fetch("http://localhost:3000/stellar-systems/1", {
+    const response = await fetch("http://localhost:3000/api/v1/stellar-systems/1", {
         headers: {
             "Content-Type": 'application/json',
         },
@@ -275,7 +275,7 @@ test('PUT_invalid_body_should_return_200', async () => {
 
 
 test('DELETE_stellar_system_with_id_should_return_200', async () => {
-    const response = await fetch("http://localhost:3000/stellar-systems/1", {
+    const response = await fetch("http://localhost:3000/api/v1/stellar-systems/1", {
         headers: {
             "Content-Type": 'application/json',
         },
@@ -295,7 +295,7 @@ test('DELETE_stellar_system_with_id_should_return_200', async () => {
 });
 
 test('DELETE_invalid_stellar_system_should_return_404', async () => {
-    const response = await fetch("http://localhost:3000/stellar-systems/99", {
+    const response = await fetch("http://localhost:3000/api/v1/stellar-systems/99", {
         headers: {
             "Content-Type": 'application/json',
         },

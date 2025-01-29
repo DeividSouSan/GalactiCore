@@ -7,30 +7,7 @@ import HTTPStatus from 'http-status-codes';
 
 const router = express.Router();
 
-router.post("/", async (req: Request, res: Response) => {
-    const repository: Repository<Planet> = database.getRepository(Planet);
-
-    try {
-        const planet = repository.create(req.body);
-        await repository.save(planet);
-
-        res.status(HTTPStatus.CREATED).json({
-            "status": "success",
-            "message": "Requisição processada com sucesso",
-            "data": {
-                planet
-            }
-        })
-    } catch {
-        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
-            "status": "error",
-            "message": "Erro ao processar a requisição",
-            "data": {}
-        })
-    }
-})
-
-router.get("/", async (req: Request, res: Response) => {
+router.get("/planets/", async (req: Request, res: Response) => {
     const repository: Repository<Planet> = database.getRepository(Planet);
 
     try {
@@ -55,7 +32,7 @@ router.get("/", async (req: Request, res: Response) => {
     }
 })
 
-router.get("/:id", async (req: Request, res: Response) => {
+router.get("/planets/:id", async (req: Request, res: Response) => {
     const repository: Repository<Planet> = database.getRepository(Planet);
 
     try {
@@ -80,7 +57,30 @@ router.get("/:id", async (req: Request, res: Response) => {
     }
 })
 
-router.put("/:id", async (req: Request, res: Response) => {
+router.post("/planets", async (req: Request, res: Response) => {
+    const repository: Repository<Planet> = database.getRepository(Planet);
+
+    try {
+        const planet = repository.create(req.body);
+        await repository.save(planet);
+
+        res.status(HTTPStatus.CREATED).json({
+            "status": "success",
+            "message": "Requisição processada com sucesso",
+            "data": {
+                planet
+            }
+        })
+    } catch {
+        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
+            "status": "error",
+            "message": "Erro ao processar a requisição",
+            "data": {}
+        })
+    }
+})
+
+router.put("/planets/:id", async (req: Request, res: Response) => {
     const repository: Repository<Planet> = database.getRepository(Planet);
 
     try {
@@ -101,7 +101,7 @@ router.put("/:id", async (req: Request, res: Response) => {
     }
 })
 
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/planets/:id", async (req: Request, res: Response) => {
     const repository: Repository<Planet> = database.getRepository(Planet);
 
     try {
