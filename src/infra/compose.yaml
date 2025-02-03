@@ -1,6 +1,7 @@
 services:
   database:
     image: mysql:9.1.0
+    container_name: mysql-dev
     env_file:
       - ../../.env
     ports:
