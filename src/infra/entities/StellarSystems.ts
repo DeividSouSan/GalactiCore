@@ -13,7 +13,7 @@ export class StellarSystem {
     @Column()
     description: string
 
-    @OneToMany(() => Planet, (planet) => planet.name, {
+    @OneToMany(() => Planet, (planet) => planet.stellarSystem, {
         cascade: true,
     })
     planets: Planet[]

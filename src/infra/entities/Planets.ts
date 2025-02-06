@@ -18,6 +18,9 @@ export class Planet {
     @Column()
     population: number
 
-    @ManyToOne(() => StellarSystem, (stellarSystem) => stellarSystem.name)
+    @Column({ nullable: false })
+    stellarSystemId: number
+
+    @ManyToOne(() => StellarSystem, (stellarSystem) => stellarSystem.planets)
     stellarSystem: StellarSystem
 }
