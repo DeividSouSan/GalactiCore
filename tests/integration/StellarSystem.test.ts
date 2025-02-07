@@ -263,7 +263,6 @@ test('PUT_invalid_body_should_return_200', async () => {
     expect(response.status).toEqual(400);
 
     const responseBody = await response.json();
-    console.log(responseBody);
     expect(responseBody).toMatchObject({
         status: 'error',
         message: "Corpo da requisição inválido. Stellar system deve conter somente 'name' e 'description'.",

@@ -193,7 +193,6 @@ test('PUT_spaceship_should_return_200', async () => {
     expect(response.status).toEqual(200);
 
     const responseBody = await response.json();
-    console.log(responseBody);
     expect(responseBody).toMatchObject({
         status: 'success',
         message: "Spaceship específicada alterada com sucesso.",
