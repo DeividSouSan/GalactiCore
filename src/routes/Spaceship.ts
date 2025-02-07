@@ -8,7 +8,7 @@ import { ResourceNotFound, InvalidRequestBody, ResourceAlreadyExists } from '../
 
 const router = express.Router();
 
-router.get('/spaceships', async (req: Request, res: Response) => {
+router.get('/spaceships', async (req: Request, res: Response): Promise<any> => {
     const repository: Repository<Spaceship> = database.getRepository(Spaceship);
 
     try {
@@ -23,8 +23,7 @@ router.get('/spaceships', async (req: Request, res: Response) => {
             }
         })
     } catch (err) {
-        console.error(err);
-        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
+        return res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
             "status": "error",
             "message": "Erro ao processar a requisição.",
             "data": {}
@@ -32,7 +31,7 @@ router.get('/spaceships', async (req: Request, res: Response) => {
     }
 })
 
-router.get('/spaceships/:id', async (req: Request, res: Response) => {
+router.get('/spaceships/:id', async (req: Request, res: Response): Promise<any> => {
     const repository: Repository<Spaceship> = database.getRepository(Spaceship);
 
     try {
@@ -43,7 +42,7 @@ router.get('/spaceships/:id', async (req: Request, res: Response) => {
             throw new ResourceNotFound("Spaceship com ID fornecido não foi encontrada.")
         }
 
-        res.status(HTTPStatus.OK).json({
+        return res.status(HTTPStatus.OK).json({
             "status": "success",
             "message": "Mostrando a spaceship com ID fornecido.",
             "data": {
@@ -51,7 +50,7 @@ router.get('/spaceships/:id', async (req: Request, res: Response) => {
             }
         })
     } catch (err) {
-        res.status(err.httpStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
+        return res.status(err.HTTPStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
             "status": "error",
             "message": err.message || "Erro ao processar a requisição",
             "data": {}
@@ -85,7 +84,7 @@ router.post('/spaceships', async (req: Request, res: Response): Promise<any> => 
             }
         })
     } catch (err) {
-        return res.status(err.httpStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
+        return res.status(err.HTTPStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
             "status": "error",
             "message": err.message || 'Houve um erro ao processar a requisição',
             "data": {}
@@ -115,7 +114,7 @@ router.put('/spaceships/:id', async (req: Request, res: Response): Promise<any> 
     }
 })
 
-router.delete('/spaceships/:id', async (req: Request, res: Response) => {
+router.delete('/spaceships/:id', async (req: Request, res: Response): Promise<any> => {
     const repository: Repository<Spaceship> = database.getRepository(Spaceship);
 
     try {
@@ -128,13 +127,13 @@ router.delete('/spaceships/:id', async (req: Request, res: Response) => {
 
         await repository.delete({ id: id });
 
-        res.status(HTTPStatus.OK).json({
+        return res.status(HTTPStatus.OK).json({
             "status": "success",
             "message": "Spaceship deletada com sucesso.",
             "data": {}
         })
     } catch (err) {
-        res.status(err.httpStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
+        return res.status(err.HTTPStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
             "status": "error",
             "message": err.message || 'Houve um erro ao processar a requisição.',
             "data": {}

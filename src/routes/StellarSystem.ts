@@ -23,7 +23,6 @@ router.get("/stellar-systems", async (req: Request, res: Response): Promise<any>
             }
         })
     } catch (err) {
-        console.error(err);
         return res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
             "status": "error",
             "message": "Erro ao processar a requisição.",
@@ -50,8 +49,7 @@ router.get("/stellar-systems/:id", async (req: Request, res: Response): Promise<
             "data": stellarSystem
         })
     } catch (err) {
-        console.error(err);
-        return res.status(err.httpStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
+        return res.status(err.HTTPStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
             "status": "error",
             "message": err.message || "Erro ao processar a requisição",
             "data": {}
@@ -82,8 +80,7 @@ router.post("/stellar-systems", async (req: Request, res: Response): Promise<any
             "data": stellarSystem
         })
     } catch (err) {
-        console.error(err);
-        return res.status(err.httpStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
+        return res.status(err.HTTPStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
             "status": "error",
             "message": err.message || "Erro ao processar a requisição",
             "data": {}
@@ -114,8 +111,7 @@ router.put("/stellar-systems/:id", async (req: Request, res: Response): Promise<
             "data": await repository.findOneByOrFail({ id: id })
         })
     } catch (err) {
-        console.error(err);
-        return res.status(err.httpStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
+        return res.status(err.HTTPStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
             "status": "error",
             "message": err.message || "Erro ao processar a requisição",
             "data": {}
@@ -141,8 +137,7 @@ router.delete("/stellar-systems/:id", async (req: Request, res: Response): Promi
             "data": {}
         })
     } catch (err) {
-        console.error(err);
-        return res.status(err.httpStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
+        return res.status(err.HTTPStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
             "status": "error",
             "message": err.message || "Erro ao processar a requisição",
             "data": {}
