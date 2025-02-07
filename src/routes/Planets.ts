@@ -2,8 +2,10 @@ import express from 'express';
 import { Request, Response } from 'express';
 import database from '../infra/database';
 import { Planet } from '../infra/entities/Planets';
-import { Repository, EntityNotFoundError } from 'typeorm';
+import { Repository } from 'typeorm';
 import HTTPStatus from 'http-status-codes';
+import { InvalidRequestBody, ResourceAlreadyExists, ResourceNotFound } from '../infra/errors';
+import { StellarSystem } from '../infra/entities/StellarSystems';
 
 const router = express.Router();
 
@@ -11,16 +13,14 @@ router.get("/planets/", async (req: Request, res: Response) => {
     const repository: Repository<Planet> = database.getRepository(Planet);
 
     try {
-        const [planets, countPlanets]: [Planet[], number] = await repository.findAndCount({
-            relations: ["stellarSystem"]
-        });
+        const [planets, countPlanets]: [Planet[], number] = await repository.findAndCount();
 
         res.status(HTTPStatus.OK).json({
             "status": "success",
-            "message": "Requisição processada com sucesso",
+            "message": "Listando todos os planetas.",
             "data": {
-                countPlanets,
-                planets
+                count_planets: countPlanets,
+                planets: planets
             }
         })
     } catch {
@@ -37,19 +37,20 @@ router.get("/planets/:id", async (req: Request, res: Response) => {
 
     try {
         const id: number = parseInt(req.params.id);
-        const planet: Planet = await repository.findOneByOrFail({ id: id })
+        const planet: Planet = await repository.findOne({ where: { id: id } });
 
+        if (!planet) {
+            throw new ResourceNotFound("Planeta com ID fornecido não foi encontrado.")
+        }
         res.status(HTTPStatus.OK).json({
             "status": "success",
-            "message": "Requisição processada com sucesso",
-            "data": {
-                planet
-            }
+            "message": "Mostrando o planeta com ID fornecido.",
+            "data": planet
         })
-    } catch {
-        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
+    } catch (error) {
+        res.status(error.HTTPStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
             "status": "error",
-            "message": "Erro ao processar a requisição",
+            "message": error.message || "Erro ao processar a requisição",
             "data": {
                 planet: {}
             }
@@ -58,24 +59,49 @@ router.get("/planets/:id", async (req: Request, res: Response) => {
 })
 
 router.post("/planets", async (req: Request, res: Response) => {
-    const repository: Repository<Planet> = database.getRepository(Planet);
+    const planetRepository: Repository<Planet> = database.getRepository(Planet);
+    const stellarSystemRepository: Repository<StellarSystem> = database.getRepository(StellarSystem);
 
     try {
-        const planet = repository.create(req.body);
-        await repository.save(planet);
+        const { name, weather, terrain, population, stellarSystemId, ...rest } = req.body;
 
+        if (!name || !weather || !terrain || !population || !stellarSystemId || Object.keys(rest).length > 0) {
+            throw new InvalidRequestBody("Corpo da requisição inválido. O planeta deve conter somente 'name', 'weather', 'terrain', 'population' e 'stellarSystemId'.");
+        }
+
+        const planet = await planetRepository.findOneBy({ name: name });
+        if (planet) {
+            throw new ResourceAlreadyExists("Planeta com o nome fornecido já existe no banco de dados.")
+        }
+
+        const stellarSystem = await stellarSystemRepository.findOneBy({ id: req.body.stellarSystemId });
+        if (!stellarSystem) {
+            throw new ResourceNotFound("Sistema de Estrelas como ID fornecido não existe.");
+        }
+
+        const newPlanet = new Planet();
+
+        newPlanet.name = req.body.name;
+        newPlanet.weather = req.body.weather;
+        newPlanet.terrain = req.body.terrain;
+        newPlanet.population = req.body.population;
+        newPlanet.stellarSystemId = req.body.stellarSystemId;
+
+        await planetRepository.save(newPlanet);
         res.status(HTTPStatus.CREATED).json({
             "status": "success",
-            "message": "Requisição processada com sucesso",
+            "message": "Planeta criado com sucesso.",
             "data": {
-                planet
+                planet: newPlanet
             }
         })
-    } catch {
-        res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
+    } catch (error) {
+        res.status(error.HTTPStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).json({
             "status": "error",
-            "message": "Erro ao processar a requisição",
-            "data": {}
+            "message": error.message || "Erro ao processar a requisição.",
+            "data": {
+                planet: {}
+            }
         })
     }
 })
