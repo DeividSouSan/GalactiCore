@@ -1,0 +1,9 @@
+name: Formatter and Linter
+run-name: Formatting and Linting Code
+on: pull_request
+jobs:
+  Lint-With-Prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm run lint:prettier:check
