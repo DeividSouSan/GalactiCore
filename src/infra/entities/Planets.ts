@@ -1,27 +1,33 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, Unique } from "typeorm";
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    Unique,
+} from "typeorm";
 import { StellarSystem } from "./StellarSystems";
 
 @Entity()
 @Unique(["name"])
 export class Planet {
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
     @Column()
-    name: string
+    name: string;
 
     @Column()
-    weather: string
+    weather: string;
 
     @Column()
-    terrain: string
+    terrain: string;
 
     @Column()
-    population: number
+    population: number;
 
     @Column({ nullable: false })
-    stellarSystemId: number
+    stellarSystemId: number;
 
     @ManyToOne(() => StellarSystem, (stellarSystem) => stellarSystem.planets)
-    stellarSystem: StellarSystem
+    stellarSystem: StellarSystem;
 }

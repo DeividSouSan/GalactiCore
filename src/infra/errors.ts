@@ -1,5 +1,4 @@
-
-import HTTPStatus from 'http-status-codes';
+import HTTPStatus from "http-status-codes";
 
 export class ResourceAlreadyExists extends Error {
     public HTTPStatusCode: number;

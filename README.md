@@ -17,14 +17,15 @@ O <code>GalactiCore</code> foi desenvolvido como um projeto para colocar em prá
 <summary><h2>Rotas da API</h2></summary>
 
 - **Planets**
+
   - **POST 📤 /planets:** Criar um novo planeta.
   - **GET 📥 /planets:** Listar todos os planetas.
   - **GET 📥 /planets/:id:** Obter detalhes de um planeta específico.
   - **PUT 🔄 /planets/:id:** Atualizar informações de um planeta.
   - **DELETE 🗑 /planets/:id:** Deletar um planeta.
 
-
 - **Stellar Systems**
+
   - **POST 📤 /star-systems:** Criar um novo sistema estelar.
   - **GET 📥 /star-systems:** Listar todos os sistemas estelares.
   - **GET 📥 /star-systems/:id:** Obter detalhes de um sistema estelar específico.
@@ -32,6 +33,7 @@ O <code>GalactiCore</code> foi desenvolvido como um projeto para colocar em prá
   - **DELETE 🗑 /star-systems/:id**: Deletar um sistema estelar.
 
 - **Characters**
+
   - **POST 📤 /characters:** Criar um novo personagem.
   - **GET 📥 /characters:** Listar todos os personagens.
   - **GET 📥 /characters/:id:** Obter detalhes de um personagem específico.
@@ -51,14 +53,14 @@ Ferramentas e Tecnologias
 </h2>
 
 > **TypeScript**: Linguagem utilizada para realização do projeto.
-> 
->**ExpressJS**: Framework minimalista e prático para criar APIs RESTful.
-> 
+>
+> **ExpressJS**: Framework minimalista e prático para criar APIs RESTful.
+>
 > **TypeORM**: Para manipular o banco de dados através do código.
-> 
+>
 > **Jest**: Para testes de integração e garantir que alterações não quebrem os endpoints.
-> 
-> **Docker Compose**: Para subir o serviço do banco de dados *MySQL*.
+>
+> **Docker Compose**: Para subir o serviço do banco de dados _MySQL_.
 
 <section align="center">
   <img src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=fff&style=for-the-badge" alt='Linguagem mais utilizada' />
@@ -99,5 +101,3 @@ test/
   Como rodar
 </h2>
   ...
-
-

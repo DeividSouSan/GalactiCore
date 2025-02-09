@@ -1,27 +1,31 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique, BeforeInsert } from 'typeorm';
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    Unique,
+    BeforeInsert,
+} from "typeorm";
 
 @Entity()
 @Unique(["email", "username"])
 export class User {
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
     @Column()
-    username: string
+    username: string;
 
     @Column()
-    email: string
+    email: string;
 
     @Column()
-    password: string
+    password: string;
 
     @BeforeInsert()
     defaultActive() {
-        this.active = false
+        this.active = false;
     }
 
     @Column()
-    active: boolean = false
-
-
+    active: boolean = false;
 }

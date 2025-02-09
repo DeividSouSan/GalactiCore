@@ -4,14 +4,14 @@ import { Entity, PrimaryGeneratedColumn, Column, Unique } from "typeorm";
 @Unique(["model"])
 export class Spaceship {
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
     @Column()
-    model: string
+    model: string;
 
     @Column()
-    manufacturer: string
+    manufacturer: string;
 
     @Column()
-    capacity: number
+    capacity: number;
 }
