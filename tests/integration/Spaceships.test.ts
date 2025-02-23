@@ -51,7 +51,6 @@ test('GET_spaceships_should_return_200', async () => {
     expect(responseBody.data.spaceships.length).toEqual(responseBody.data.countSpaceships);
 });
 
-
 test('POST_spaceship_should_return_201', async () => {
     const response = await fetch("http://localhost:3000/api/v1/spaceships/", {
         headers: {

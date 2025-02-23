@@ -209,7 +209,7 @@ test('POST_invalid_body_should_return_400', async () => {
             "terrain": "Plano",
             "population": 120,
             "stellarSystemId": 1,
-            "size": 1000
+            "size": 1000 // this property doesn't exist
         })
     })
 
@@ -233,7 +233,7 @@ test('POST_body_with_missing_values_should_return_400', async () => {
         method: "POST",
         body: JSON.stringify({
             "name": "Terra",
-            // missing description
+            // missing all other properties
         })
     })
 
@@ -249,6 +249,37 @@ test('POST_body_with_missing_values_should_return_400', async () => {
     expect(Object.keys(responseBody.data.planet).length).toEqual(0);
 });
 
+test('PUT_stellar_system_should_return_200', async () => {
+    const response = await fetch("http://localhost:3000/api/v1/planets/1", {
+        headers: {
+            "Content-Type": 'application/json',
+        },
+        method: "PUT",
+        body: JSON.stringify({
+            "name": "Marte",
+            "weather": "Frio",
+            "terrain": "Montanhoso"
+        })
+    })
+
+    expect(response.status).toEqual(200);
+
+    const responseBody = await response.json();
+    expect(responseBody).toMatchObject({
+        status: 'success',
+        message: "Planet específicado alterado com sucesso.",
+        data: {}
+    });
+
+    // altered
+    expect(responseBody.data.planet.name).toEqual("Marte");
+    expect(responseBody.data.planet.weather).toEqual("Frio");
+    expect(responseBody.data.planet.terrain).toEqual("Montanhoso");
+    // not altered
+    expect(responseBody.data.planet.population).toEqual(800000);
+    expect(responseBody.data.planet.stellarSystemId).toEqual(1);
+});
+
 test('PUT_invalid_stellar_system_should_return_404', async () => {
     const response = await fetch("http://localhost:3000/api/v1/planets/99", {
         headers: {
@@ -256,7 +287,7 @@ test('PUT_invalid_stellar_system_should_return_404', async () => {
         },
         method: "PUT",
         body: JSON.stringify({
-            "name": "Andromeda"
+            "name": "Plutão"
         })
     })
 
@@ -272,41 +303,15 @@ test('PUT_invalid_stellar_system_should_return_404', async () => {
     expect(Object.keys(responseBody.data).length).toEqual(0);
 });
 
-test('PUT_stellar_system_should_return_200', async () => {
+
+test('PUT_invalid_body_should_return_400', async () => {
     const response = await fetch("http://localhost:3000/api/v1/planets/1", {
         headers: {
             "Content-Type": 'application/json',
         },
         method: "PUT",
         body: JSON.stringify({
-            "name": "Andromeda",
-            description: "Distante",
-        })
-    })
-
-    expect(response.status).toEqual(200);
-
-    const responseBody = await response.json();
-    expect(responseBody).toMatchObject({
-        status: 'success',
-        message: "Planet específicado alterado com sucesso.",
-        data: {}
-    });
-
-    expect(responseBody.data).toMatchObject({
-        name: "Andromeda",
-        description: "Distante",
-    });
-});
-
-test('PUT_invalid_body_should_return_200', async () => {
-    const response = await fetch("http://localhost:3000/api/v1/planets/1", {
-        headers: {
-            "Content-Type": 'application/json',
-        },
-        method: "PUT",
-        body: JSON.stringify({
-            "teste": 50,
+            "size": 50,
         })
     })
 
@@ -316,7 +321,7 @@ test('PUT_invalid_body_should_return_200', async () => {
     console.log(responseBody);
     expect(responseBody).toMatchObject({
         status: 'error',
-        message: "Corpo da requisição inválido. planet deve conter somente 'name', 'weather', 'terrain', 'population' e 'stellar-system'.",
+        message: "Corpo da requisição inválido. planet deve conter somente 'name', 'weather', 'terrain', 'population' e 'stellarSystemId'.",
         data: {}
     });
 

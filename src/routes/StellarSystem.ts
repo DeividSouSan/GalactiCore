@@ -99,7 +99,7 @@ router.put("/stellar-systems/:id", async (req: Request, res: Response): Promise<
         }
 
         const { name, description, ...rest } = req.body;
-        if ((!name && !description) || Object.keys(rest).length > 0) {
+        if ((!name && !description) || Object.keys(rest).length > 0) { // só precisa da 2ª parte, depois do ||
             throw new InvalidRequestBody("Corpo da requisição inválido. Stellar system deve conter somente 'name' e 'description'.");
         }
 
