@@ -213,7 +213,7 @@ test("POST_invalid_body_should_return_400", async () => {
             terrain: "Plano",
             population: 120,
             stellarSystemId: 1,
-            size: 1000,
+            size: 1000, // this property doesn't exist
         }),
     });
 
@@ -238,7 +238,7 @@ test("POST_body_with_missing_values_should_return_400", async () => {
         method: "POST",
         body: JSON.stringify({
             name: "Terra",
-            // missing description
+            // missing all other properties
         }),
     });
 
@@ -253,4 +253,122 @@ test("POST_body_with_missing_values_should_return_400", async () => {
     });
 
     expect(Object.keys(responseBody.data.planet).length).toEqual(0);
+});
+
+test("PUT_stellar_system_should_return_200", async () => {
+    const response = await fetch("http://localhost:3000/api/v1/planets/1", {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        method: "PUT",
+        body: JSON.stringify({
+            name: "Marte",
+            weather: "Frio",
+            terrain: "Montanhoso",
+        }),
+    });
+
+    expect(response.status).toEqual(200);
+
+    const responseBody = await response.json();
+    expect(responseBody).toMatchObject({
+        status: "success",
+        message: "Planet específicado alterado com sucesso.",
+        data: {},
+    });
+
+    // altered
+    expect(responseBody.data.planet.name).toEqual("Marte");
+    expect(responseBody.data.planet.weather).toEqual("Frio");
+    expect(responseBody.data.planet.terrain).toEqual("Montanhoso");
+    // not altered
+    expect(responseBody.data.planet.population).toEqual(800000);
+    expect(responseBody.data.planet.stellarSystemId).toEqual(1);
+});
+
+test("PUT_invalid_stellar_system_should_return_404", async () => {
+    const response = await fetch("http://localhost:3000/api/v1/planets/99", {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        method: "PUT",
+        body: JSON.stringify({
+            name: "Plutão",
+        }),
+    });
+
+    expect(response.status).toEqual(404);
+
+    const responseBody = await response.json();
+    expect(responseBody).toMatchObject({
+        status: "error",
+        message: "Planet com ID fornecido não foi encontrado.",
+        data: {},
+    });
+
+    expect(Object.keys(responseBody.data).length).toEqual(0);
+});
+
+test("PUT_invalid_body_should_return_400", async () => {
+    const response = await fetch("http://localhost:3000/api/v1/planets/1", {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        method: "PUT",
+        body: JSON.stringify({
+            size: 50,
+        }),
+    });
+
+    expect(response.status).toEqual(400);
+
+    const responseBody = await response.json();
+    expect(responseBody).toMatchObject({
+        status: "error",
+        message:
+            "Corpo da requisição inválido. planet deve conter somente 'name', 'weather', 'terrain', 'population' e 'stellarSystemId'.",
+        data: {},
+    });
+
+    expect(Object.keys(responseBody.data).length).toEqual(0);
+});
+
+test("DELETE_stellar_system_with_id_should_return_200", async () => {
+    const response = await fetch("http://localhost:3000/api/v1/planets/1", {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        method: "DELETE",
+    });
+
+    expect(response.status).toEqual(200);
+
+    const responseBody = await response.json();
+    expect(responseBody).toMatchObject({
+        status: "success",
+        message: "Planet especificado deletado com sucesso.",
+        data: {},
+    });
+
+    expect(Object.keys(responseBody.data).length).toEqual(0);
+});
+
+test("DELETE_invalid_stellar_system_should_return_404", async () => {
+    const response = await fetch("http://localhost:3000/api/v1/planets/99", {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        method: "DELETE",
+    });
+
+    expect(response.status).toEqual(404);
+
+    const responseBody = await response.json();
+    expect(responseBody).toMatchObject({
+        status: "error",
+        message: "Planet com ID fornecido não existe.",
+        data: {},
+    });
+
+    expect(Object.keys(responseBody.data).length).toEqual(0);
 });
