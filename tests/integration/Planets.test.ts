@@ -330,5 +330,45 @@ test('PUT_invalid_body_should_return_400', async () => {
         data: {}
     });
 
-    expect(Object.keys(responseBody.data.planet).length).toEqual(0);
+    expect(Object.keys(responseBody.data).length).toEqual(0);
+});
+
+test('DELETE_stellar_system_with_id_should_return_200', async () => {
+    const response = await fetch("http://localhost:3000/api/v1/planets/1", {
+        headers: {
+            "Content-Type": 'application/json',
+        },
+        method: "DELETE",
+    })
+
+    expect(response.status).toEqual(200);
+
+    const responseBody = await response.json();
+    expect(responseBody).toMatchObject({
+        status: 'success',
+        message: "Planet especificado deletado com sucesso.",
+        data: {}
+    });
+
+    expect(Object.keys(responseBody.data).length).toEqual(0);
+});
+
+test('DELETE_invalid_stellar_system_should_return_404', async () => {
+    const response = await fetch("http://localhost:3000/api/v1/planets/99", {
+        headers: {
+            "Content-Type": 'application/json',
+        },
+        method: "DELETE",
+    })
+
+    expect(response.status).toEqual(404);
+
+    const responseBody = await response.json();
+    expect(responseBody).toMatchObject({
+        status: 'error',
+        message: "Planet com ID fornecido não existe.",
+        data: {}
+    });
+
+    expect(Object.keys(responseBody.data).length).toEqual(0);
 });
