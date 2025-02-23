@@ -1,58 +1,60 @@
-import express from 'express';
-import { Request, Response } from 'express';
-import database from '../infra/database'
-import { Repository } from 'typeorm';
-import { Character } from '../infra/entities/Characters';
-import HTTPStatus from 'http-status-codes';
+import express from "express";
+import { Request, Response } from "express";
+import database from "../infra/database";
+import { Repository } from "typeorm";
+import { Character } from "../infra/entities/Characters";
+import HTTPStatus from "http-status-codes";
 
-const router = express.Router()
+const router = express.Router();
 
 router.get("/characters", async (req: Request, res: Response) => {
     const repository: Repository<Character> = database.getRepository(Character);
 
     try {
-        const [characters, countCharacters]: [Character[], number] = await repository.findAndCount();
+        const [characters, countCharacters]: [Character[], number] =
+            await repository.findAndCount();
 
         res.status(HTTPStatus.OK).json({
-            "status": "success",
-            "message": "Requisição processada com sucesso",
-            "data": {
+            status: "success",
+            message: "Requisição processada com sucesso",
+            data: {
                 countCharacters,
-                characters
-            }
-        })
+                characters,
+            },
+        });
     } catch {
         res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
-            "status": "error",
-            "message": "Erro ao processar a requisição",
-            "data": {}
-        })
+            status: "error",
+            message: "Erro ao processar a requisição",
+            data: {},
+        });
     }
-})
+});
 
 router.get("/characters/:id", async (req: Request, res: Response) => {
     const repository: Repository<Character> = database.getRepository(Character);
 
     try {
         const id: number = parseInt(req.params.id);
-        const character: Character = await repository.findOneByOrFail({ id: id });
+        const character: Character = await repository.findOneByOrFail({
+            id: id,
+        });
 
         res.status(HTTPStatus.OK).json({
-            "status": "success",
-            "message": "Requisição processada com sucesso",
-            "data": {
-                character
-            }
-        })
+            status: "success",
+            message: "Requisição processada com sucesso",
+            data: {
+                character,
+            },
+        });
     } catch {
         res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
-            "status": "error",
-            "message": "Erro ao processar a requisição",
-            "data": {}
-        })
+            status: "error",
+            message: "Erro ao processar a requisição",
+            data: {},
+        });
     }
-
-})
+});
 
 router.post("/characters", async (req: Request, res: Response) => {
     const repository: Repository<Character> = database.getRepository(Character);
@@ -62,20 +64,20 @@ router.post("/characters", async (req: Request, res: Response) => {
         await repository.save(character);
 
         res.status(HTTPStatus.CREATED).json({
-            "status": "success",
-            "message": "Requisição processada com sucesso",
-            "data": {
-                character
-            }
-        })
+            status: "success",
+            message: "Requisição processada com sucesso",
+            data: {
+                character,
+            },
+        });
     } catch {
         res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
-            "status": "error",
-            "message": "Erro ao processar a requisição",
-            "data": {}
-        })
+            status: "error",
+            message: "Erro ao processar a requisição",
+            data: {},
+        });
     }
-})
+});
 
 router.put("/characters/:id", async (req: Request, res: Response) => {
     const repository: Repository<Character> = database.getRepository(Character);
@@ -85,42 +87,43 @@ router.put("/characters/:id", async (req: Request, res: Response) => {
         await repository.update({ id: id }, req.body);
 
         res.status(HTTPStatus.OK).json({
-            "status": "success",
-            "message": "Requisição processada com sucesso",
-            "data": await repository.findOneByOrFail({ id: id })
-        })
+            status: "success",
+            message: "Requisição processada com sucesso",
+            data: await repository.findOneByOrFail({ id: id }),
+        });
     } catch {
         res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
-            "status": "error",
-            "message": "Erro ao processar a requisição",
-            "data": {}
-        })
+            status: "error",
+            message: "Erro ao processar a requisição",
+            data: {},
+        });
     }
-})
+});
 
 router.delete("/characters/:id", async (req: Request, res: Response) => {
     const repository: Repository<Character> = database.getRepository(Character);
 
     try {
         const id: number = parseInt(req.params.id);
-        const character: Character = await repository.findOneByOrFail({ id: id });
+        const character: Character = await repository.findOneByOrFail({
+            id: id,
+        });
         await repository.delete({ id: id });
 
         res.status(HTTPStatus.OK).json({
-            "status": "success",
-            "message": "Requisição processada com sucesso",
-            "data": {
-                character
-            }
-        })
+            status: "success",
+            message: "Requisição processada com sucesso",
+            data: {
+                character,
+            },
+        });
     } catch {
         res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({
-            "status": "error",
-            "message": "Erro ao processar a requisição",
-            "data": {}
-        })
+            status: "error",
+            message: "Erro ao processar a requisição",
+            data: {},
+        });
     }
-})
-
+});
 
 export default router;

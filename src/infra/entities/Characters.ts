@@ -10,18 +10,18 @@ export enum CharacterAffiliation {
 @Entity()
 export class Character {
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
     @Column()
-    race: string
+    race: string;
 
     @Column({
         type: "enum",
         enum: CharacterAffiliation,
         default: CharacterAffiliation.JEDI,
     })
-    affiliation: CharacterAffiliation
+    affiliation: CharacterAffiliation;
 
     @ManyToOne(() => Planet, (planet) => planet.name)
-    homePlanet: Planet
+    homePlanet: Planet;
 }
