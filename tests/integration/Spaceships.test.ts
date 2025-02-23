@@ -53,7 +53,7 @@ test("GET_spaceships_should_return_200", async () => {
     );
 });
 
-test('POST_spaceship_should_return_201', async () => {
+test("POST_spaceship_should_return_201", async () => {
     const response = await fetch("http://localhost:3000/api/v1/spaceships/", {
         headers: {
             "Content-Type": "application/json",

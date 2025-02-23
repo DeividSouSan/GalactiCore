@@ -142,29 +142,36 @@ router.put("/planets/:id", async (req: Request, res: Response) => {
 
         const planet: Planet = await repository.findOneBy({ id: id });
         if (!planet) {
-            throw new ResourceNotFound("Planet com ID fornecido não foi encontrado.")
+            throw new ResourceNotFound(
+                "Planet com ID fornecido não foi encontrado.",
+            );
         }
 
-        const { name, weather, terrain, population, stellarSystemId, ...rest } = req.body;
+        const { name, weather, terrain, population, stellarSystemId, ...rest } =
+            req.body;
         if (Object.keys(rest).length > 0) {
-            throw new InvalidRequestBody("Corpo da requisição inválido. planet deve conter somente 'name', 'weather', 'terrain', 'population' e 'stellarSystemId'.");
+            throw new InvalidRequestBody(
+                "Corpo da requisição inválido. planet deve conter somente 'name', 'weather', 'terrain', 'population' e 'stellarSystemId'.",
+            );
         }
 
         await repository.update({ id: id }, req.body);
 
         res.status(HTTPStatus.OK).send({
-            "status": "success",
-            "message": "Planet específicado alterado com sucesso.",
-            "data": {
-                "planet": await repository.findOneByOrFail({ id: id })
-            }
-        })
+            status: "success",
+            message: "Planet específicado alterado com sucesso.",
+            data: {
+                planet: await repository.findOneByOrFail({ id: id }),
+            },
+        });
     } catch (error) {
-        res.status(error.HTTPStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).send({
-            "status": "error",
-            "message": error.message || "Erro ao processar a requisição",
-            "data": {}
-        })
+        res.status(
+            error.HTTPStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR,
+        ).send({
+            status: "error",
+            message: error.message || "Erro ao processar a requisição",
+            data: {},
+        });
     }
 });
 
@@ -178,19 +185,21 @@ router.delete("/planets/:id", async (req: Request, res: Response) => {
             throw new ResourceNotFound("Planet com ID fornecido não existe.");
         }
 
-        await repository.delete({ id: id })
+        await repository.delete({ id: id });
 
         res.status(HTTPStatus.OK).send({
-            "status": "success",
-            "message": "Planet especificado deletado com sucesso.",
-            "data": {}
-        })
+            status: "success",
+            message: "Planet especificado deletado com sucesso.",
+            data: {},
+        });
     } catch (error) {
-        res.status(error.HTTPStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR).send({
-            "status": "error",
-            "message": error.message || "Erro ao processar a requisição",
-            "data": {}
-        })
+        res.status(
+            error.HTTPStatusCode || HTTPStatus.INTERNAL_SERVER_ERROR,
+        ).send({
+            status: "error",
+            message: error.message || "Erro ao processar a requisição",
+            data: {},
+        });
     }
 });
 
